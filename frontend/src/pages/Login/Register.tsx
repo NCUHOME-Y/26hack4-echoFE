@@ -3,19 +3,14 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import styles from './Login.module.css'
 import { login, register, setToken } from '../../mock/auth'
+import { useNavigate } from 'react-router-dom'
 
-// 账号3–64、昵称1–64、密码8–64且只能大小写字母和数字
+// 账号3–64、昵称7、密码8–64且只能大小写字母和数字
 const PASSWORD_RE = /^[a-zA-Z0-9]{8,64}$/
 const ACCOUNT_RE = /^[a-zA-Z0-9]{3,64}$/
 
-export interface RegisterProps {
-  // 跳登录页
-  onSwitchToLogin?: () => void
-  // 注册后跳首页
-  onSuccess?: (token: string, nickname: string) => void
-}
-
-export default function Register({ onSwitchToLogin, onSuccess }: RegisterProps) {
+export default function Register() {
+  const navigate = useNavigate()
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
@@ -63,7 +58,7 @@ export default function Register({ onSwitchToLogin, onSuccess }: RegisterProps) 
 
       setToken(token)
       setHint('注册成功，已自动登录')
-      onSuccess?.(token, nick)
+      navigate('/home')
     } catch (err) {
       setError(err instanceof Error ? err.message : '注册失败，请稍后重试')
     } finally {
@@ -89,7 +84,7 @@ export default function Register({ onSwitchToLogin, onSuccess }: RegisterProps) 
             role="tab"
             aria-selected="false"
             className={styles.segBtn}
-            onClick={() => onSwitchToLogin?.()}
+            onClick={() => navigate('/login')}
           >
             登录
           </button>

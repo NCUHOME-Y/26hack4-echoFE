@@ -1,16 +1,12 @@
 //登录页
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from './Login.module.css'
 import { login, setToken } from '../../mock/auth'
 
-export interface LoginProps {
-  onSwitchToRegister?: () => void
-  // 跳首页
-  onSuccess?: (token: string, nickname: string) => void
-}
-
-export default function Login({ onSwitchToRegister, onSuccess }: LoginProps) {
+export default function Login() {
+  const navigate = useNavigate()
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -41,7 +37,8 @@ export default function Login({ onSwitchToRegister, onSuccess }: LoginProps) {
       const { token, user } = await login(acc, password)
       setToken(token)
       setHint(`登录成功，欢迎回来 ${user.nickname}`)
-      onSuccess?.(token, user.nickname)
+      sessionStorage.setItem('echo_nickname', user.nickname)
+      navigate('/home');
     } catch (err) {
       setError(err instanceof Error ? err.message : '登录失败，请稍后重试')
     } finally {
@@ -79,7 +76,7 @@ export default function Login({ onSwitchToRegister, onSuccess }: LoginProps) {
             role="tab"
             aria-selected="false"
             className={styles.segBtn}
-            onClick={() => onSwitchToRegister?.()}
+            onClick={() => navigate('/register',)}
           >
             注册
           </button>
