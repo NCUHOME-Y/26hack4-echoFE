@@ -6,6 +6,7 @@ import { login, register, setToken } from '../../mock/auth'
 
 // 账号3–64、昵称1–64、密码8–64且只能大小写字母和数字
 const PASSWORD_RE = /^[a-zA-Z0-9]{8,64}$/
+const ACCOUNT_RE = /^[a-zA-Z0-9]{3,64}$/
 
 export interface RegisterProps {
   // 跳登录页
@@ -28,12 +29,14 @@ export default function Register({ onSwitchToLogin, onSuccess }: RegisterProps) 
     const acc = account.trim()
     const nick = nickname.trim()
     if (!acc) return '请填写账号'
-    if (acc.length < 3 || acc.length > 64) return '账号长度需为 3–64 个字符'
+    if (acc.length < 3 || acc.length > 64) return '账号长度需为 3–64 位'
     if (/\s/.test(acc)) return '账号不能包含空格'
+    if (!ACCOUNT_RE.test(acc)) return '账号只能包含大小写字母和数字'
     if (!password) return '请填写密码'
-    if (!PASSWORD_RE.test(password)) return '密码需为 8–64 位，且只能包含大小写字母和数字'
+    if (password.length < 8 || password.length > 64) return '密码需为 8–64 位'
+    if (!PASSWORD_RE.test(password)) return '密码只能包含大小写字母和数字'
     if (!nick) return '请填写昵称'
-    if (nick.length > 64) return '昵称不超过 64 个字'
+    if (nick.length > 7) return '昵称最多7个字'
     return ''
   }
 
@@ -150,7 +153,7 @@ export default function Register({ onSwitchToLogin, onSuccess }: RegisterProps) 
               disabled={submitting}
               onChange={(e) => setNickname(e.target.value)}
               autoComplete="nickname"
-              maxLength={64}
+              maxLength={7}
               enterKeyHint="go"
               aria-label="昵称"
             />

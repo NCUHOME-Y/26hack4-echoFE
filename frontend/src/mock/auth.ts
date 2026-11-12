@@ -20,11 +20,18 @@ export interface LoginResult {
 const USERS_KEY = 'mock_users'
 const TOKEN_KEY = 'echo_token'
 
+const ACCOUNT_RE = /^[a-zA-Z0-9]{3,64}$/
+const PASSWORD_RE = /^[a-zA-Z0-9]{8,64}$/
+
 //错误返回
-const MSG_REGISTER_INVALID = '参数不合法：账号和昵称必填，密码 8-64 位且只能包含大小写字母和数字'
-const MSG_LOGIN_INVALID = '参数不合法：账号和密码必填'
+const MSG_REGISTER_INVALID = '账号和昵称必填'
+const MSG_LOGIN_INVALID = '账号和密码必填'
+const MSG_PASSWORD_INVALID = '密码需为 8–64 位，密码只能包含大小写字母和数字'
 const MSG_INVALID_CREDENTIALS = '账号或密码错误'
 const MSG_ACCOUNT_TAKEN = '账号已被注册'
+const MSG_NICKNAME_TOO_LONG = '昵称最多7个字'
+const MSG_ACCOUNT_INVALID = '账号只能包含大小写字母和数字'
+
 
 
 function readUsers(): MockUser[] {
@@ -120,7 +127,7 @@ export async function login(account: string, password: string): Promise<LoginRes
 }
 
 
-// 注册（对应 POST /api/auth/register，成功 201）
+// 注册
 // 成功：返回用户信息
 // 失败：throw Error
 export async function register(
@@ -133,6 +140,15 @@ export async function register(
 
   if (!account || !nickname || !password) {
     throw new Error(MSG_REGISTER_INVALID)
+  }
+  if (nickname.length > 7) {
+    throw new Error(MSG_NICKNAME_TOO_LONG)
+  }
+  if (ACCOUNT_RE.test(account) === false) {
+    throw new Error(MSG_ACCOUNT_INVALID)
+  }
+  if (PASSWORD_RE.test(password) === false) {
+    throw new Error(MSG_PASSWORD_INVALID)
   }
 
   const users = readUsers()
