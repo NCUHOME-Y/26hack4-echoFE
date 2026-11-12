@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import styles from './Login.module.css'
-//import { loginApi } from '../../api/mock/auth'
 import { login, setToken } from '../../mock/auth'
 
 export interface LoginProps {

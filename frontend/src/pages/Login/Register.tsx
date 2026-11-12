@@ -3,13 +3,12 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import styles from './Login.module.css'
 import { login, register, setToken } from '../../mock/auth'
-//import { loginApi, registerApi } from '../../api/mock/auth'
 
 // 账号3–64、昵称1–64、密码8–64且只能大小写字母和数字
 const PASSWORD_RE = /^[a-zA-Z0-9]{8,64}$/
 
 export interface RegisterProps {
-  //跳登录页
+  // 跳登录页
   onSwitchToLogin?: () => void
   // 注册后跳首页
   onSuccess?: (token: string, nickname: string) => void
