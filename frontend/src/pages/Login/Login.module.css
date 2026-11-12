@@ -1,0 +1,177 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 40px 24px;
+}
+
+/* slogon */
+.quoteCard {
+  flex: 0 0 auto;
+  align-self: flex-start; 
+  width: fit-content;    
+  max-width: 100%;
+  margin-top: 10%;
+  padding: 8px 16px 32px;   
+  background: #ececec;
+}
+
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: #111;
+}
+
+.title span {
+  display: block;
+}
+
+.spacer {
+  flex: 1 1 auto;
+  min-height: 32px;
+} 
+
+/* 登录注册 */
+.card {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  min-height: 500px;
+  border-radius: 20px;
+  background: #f4f4f4;
+  box-shadow:
+    0 1px 2px rgba(17, 17, 17, 0.04),
+    0 8px 24px rgba(17, 17, 17, 0.08);
+}
+
+.seg {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.segBtn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease;
+}
+
+.segBtnActive {
+  background: #111;
+  color: #fff;
+}
+
+.segBtn:active {
+  transform: scale(0.98);
+}
+
+/* 表单 */
+.form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  line-height: 1.4;
+  outline: none;
+  transition: box-shadow 0.18s ease;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.16);
+}
+
+.input:disabled {
+  color: #767676;
+}
+
+/* 提示 */
+.error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #d92d20;
+  word-break: break-word;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #1a7f37;
+  word-break: break-word;
+}
+
+/* 提交按钮 */
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* 没填完是灰的，能点 */
+.submitIdle {
+  background: #bdbdbd;
+}
+
+.submit:active {
+  opacity: 0.9;
+}
+
+.submit:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
