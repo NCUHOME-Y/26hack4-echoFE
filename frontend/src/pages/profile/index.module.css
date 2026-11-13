@@ -1,0 +1,219 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #d7f3f5;
+}
+
+/* 顶部：标题 + 回声水印 + 紫色引号 */
+.hero {
+  position: relative;
+  padding: 26px 20px 34px;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-size: 50px;
+  margin-top: 1px;
+  margin-left: 12px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* 回声 logo 水印：使用裁掉透明留白的 logo-trim.png */
+.logo {
+  position: absolute;
+  top: 26px;
+  right: 57px;
+  width:109px;
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 昵称正上方的左右引号：紧挨、跨在虚线框上，对应设计稿 */
+.decoCorner {
+  position: absolute;
+  top: -16px;
+  right: 30px;
+  width: 20px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.decoCornerLeft {
+  left: 60%;
+}
+
+
+
+/* 白色资料卡，蓝色虚线边框 */
+.card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 93px 16px 16px;
+
+  padding: 16px;
+  background: #fff;
+  border: 2px dashed #72a1ed;
+  border-radius: 16px;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.nickname {
+  margin: 0 0 6px;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.level {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #3a3745;
+}
+
+.progress {
+  height: 10px;
+  overflow: hidden;
+  background: #d7f3f5;
+  border-radius: 999px;
+}
+
+.progressFill {
+  height: 100%;
+  background: #3d9db3;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #707d80;
+}
+
+/* 搜索 */
+.searchWrap {
+  position: relative;
+  padding: 0 16px 16px;
+}
+
+/* 搜索框左侧的小引号 */
+.decoQuote {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  width: 10px;
+  transform: translateY(-60%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.search {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  text-align: center;
+  font-size: 16px;
+  background: #eaf7f9;
+  border: 0;
+  border-radius: 999px;
+  outline: none;
+  color: #33616b;
+}
+
+.search::placeholder {
+  color: #9aa6a8;
+}
+
+/* 沙色列表区 */
+.listArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 16px 24px;
+  background: #f5f2d5;
+  border-radius: 24px 24px 0 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.04);
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  color: #111;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 状态标签 */
+.badge {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  background: #e6e6e6;
+  color: #3a3745;
+}
+
+.settled {
+  background: #e6e6e6;
+}
+
+.open {
+  background: #d7f3f5;
+  color: #33616b;
+}
+
+.lost {
+  background: #d4d8d9;
+  color: #595959;
+}
+
+.empty {
+  margin: 28px 0;
+  text-align: center;
+  font-size: 13px;
+  color: #707d80;
+}
+
+.error {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #d92d20;
+}
