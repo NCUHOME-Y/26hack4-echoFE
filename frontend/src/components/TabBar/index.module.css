@@ -1,0 +1,68 @@
+.bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 10%;
+  padding: 0 4px;
+  background: #EBF7FF;
+  border-top: 1px solid #f0f0f0; 
+  border-radius: 20px 20px 0 0;
+}
+
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: transparent;
+  transition: background-color 0.15s;
+}
+
+.active .iconBox {
+  background: #ffffff;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 1;
+  color: #33626B;
+}
+
+.ask {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.askIcon {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  display: block;
+}

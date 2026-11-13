@@ -1,19 +1,30 @@
-import { useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Login/Register'
-
-type Page = 'login' | 'register'
+import Home from './pages/home'
+import BasicLayout from './layouts/BasicLayout'
+import RequireAuth from './components/RequireAuth'
 
 function App() {
-  // 登录页 / 注册页是两个独立页面，这里只负责在它们之间切换。
-  // 以后接了路由库，把这两行换成路由配置即可，页面组件不用改。
-  const [page, setPage] = useState<Page>('login')
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/ask" element={<div style={{ padding: 24 }}>提问（待做）</div>} />
 
-  return page === 'login' ? (
-    <Login onSwitchToRegister={() => setPage('register')} />
-  ) : (
-    <Register onSwitchToLogin={() => setPage('login')} />
+      <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/debate" element={<div style={{ padding: 24 }}>争议（待做）</div>} />
+            <Route path="/shell" element={<div style={{ padding: 24 }}>海螺（待做）</div>} />
+            <Route path="/profile" element={<div style={{ padding: 24 }}>我的（待做）</div>} />
+            </Route>
+
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   )
 }
 
 export default App
+
+
+
