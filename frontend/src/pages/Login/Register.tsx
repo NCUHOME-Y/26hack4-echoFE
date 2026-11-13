@@ -58,6 +58,7 @@ export default function Register() {
 
       setToken(token)
       setHint('注册成功，已自动登录')
+      sessionStorage.setItem('echo_nickname', nickname)
       navigate('/home')
     } catch (err) {
       setError(err instanceof Error ? err.message : '注册失败，请稍后重试')

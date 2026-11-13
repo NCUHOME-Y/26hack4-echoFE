@@ -1,4 +1,4 @@
-// src/pages/Beach/index.tsx
+// 海滩or首页
 import { useState, useEffect } from 'react'
 import styles from './index.module.css'
 
@@ -14,7 +14,7 @@ useEffect(() => {
 
   return (
     <div className={styles.page}>
-      <h1>🏖️ 欢迎来到海滩主页！{nickname}</h1>
+      <h1>首页{nickname}</h1>
     </div>
   );
 }
