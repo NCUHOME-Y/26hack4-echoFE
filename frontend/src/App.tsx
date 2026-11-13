@@ -10,13 +10,13 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/ask" element={<div style={{ padding: 24 }}>提问</div>} />
+      <Route path="/ask" element={<div style={{ padding: 24 }}>提问（待做）</div>} />
 
       <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
             <Route path="/home" element={<Home />} />
-            <Route path="/debate" element={<div style={{ padding: 24 }}>争议</div>} />
-            <Route path="/shell" element={<div style={{ padding: 24 }}>海螺</div>} />
-            <Route path="/profile" element={<div style={{ padding: 24 }}>我的</div>} />
+            <Route path="/debate" element={<div style={{ padding: 24 }}>争议（待做）</div>} />
+            <Route path="/shell" element={<div style={{ padding: 24 }}>海螺（待做）</div>} />
+            <Route path="/profile" element={<div style={{ padding: 24 }}>我的（待做）</div>} />
             </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
