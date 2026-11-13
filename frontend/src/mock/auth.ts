@@ -3,6 +3,7 @@ export interface UserInfo {
   account: string
   nickname: string
   avatar: string
+  exp: number
   created_at: string
   updated_at: string
 }
@@ -81,6 +82,7 @@ function toUserInfo(user: MockUser): UserInfo {
     id: user.id,
     account: user.account,
     nickname: user.nickname,
+    exp: user.exp,
     avatar: user.avatar,
     created_at: user.created_at,
     updated_at: user.updated_at,
@@ -97,6 +99,7 @@ function ensureDemoUser(): void {
       account: 'demo',
       nickname: '演示用户',
       avatar: '',
+      exp: 628,
       created_at: time,
       updated_at: time,
       password: 'demo12345',
@@ -169,6 +172,7 @@ export async function register(
     account: account,
     nickname: nickname,
     avatar: '',
+    exp: 0,
     created_at: time,
     updated_at: time,
     password: password,
@@ -190,4 +194,22 @@ export function getToken(): string | null {
 
 export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY)
+}
+
+// —— 供「我的」页mock复用：按token找到当前登录用户 ——
+export function getCurrentUser(): MockUser | null {
+  const token = getToken()
+  const match = token ? /^mock-token-(\d+)-/.exec(token) : null
+  if (!match) return null
+  const id = Number(match[1])
+  return readUsers().find((item) => item.id === id) ?? null
+}
+
+//覆盖保存当前用户，mock里改头像/加经验都走这里
+export function saveCurrentUser(user: MockUser): void {
+  const users = readUsers()
+  const index = users.findIndex((item) => item.id === user.id)
+  if (index === -1) return
+  users[index] = user
+  saveUsers(users)
 }
