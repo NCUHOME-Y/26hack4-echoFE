@@ -4,6 +4,7 @@ import Register from './pages/Login/Register'
 import Home from './pages/home'
 import BasicLayout from './layouts/BasicLayout'
 import RequireAuth from './components/RequireAuth'
+import Profile from './pages/profile'
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/debate" element={<div style={{ padding: 24 }}>争议（待做）</div>} />
             <Route path="/shell" element={<div style={{ padding: 24 }}>海螺（待做）</div>} />
-            <Route path="/profile" element={<div style={{ padding: 24 }}>我的（待做）</div>} />
+                        <Route path="/profile" element={<Profile />} />
             </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
