@@ -27,8 +27,8 @@
 .title {
   margin: 26px 0 18px;
   font-size: 22px;
-  font-weight: 400;
-  color: #000000;
+  font-weight: 500;
+  color: #595959;
 }
 
 .stage {
@@ -49,9 +49,10 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+  padding: 1px 1px 7px 1px;
   width: 32px;
   height: 32px;
-  font-size: 22px;
+  font-size: 35px;
   line-height: 1;
   color: #33616b;
   background: #abe5eb;
@@ -90,7 +91,7 @@
 /* 分割线 + 纯文字按钮 */
 .actions {
   display: flex;
-  border-top: 1px solid #000000;
+  border-top: 1.5px solid #33616b;
 }
 
 .cancel,
@@ -98,8 +99,8 @@
   flex: 1;
   height: 48px;
   font-family: inherit;
-  font-size: 16px;
-  color: #000000;
+  font-size: 18px;
+  color: #595959;
   background: #ffffff;
   border: 0;
   cursor: pointer;
