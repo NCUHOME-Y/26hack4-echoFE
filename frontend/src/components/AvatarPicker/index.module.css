@@ -1,0 +1,116 @@
+/* 遮罩只盖住 393px 的手机画布，PC 预览时不会糊满整个窗口 */
+.mask {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 393px);
+  background: rgba(17, 17, 17, 0.45);
+  transform: translateX(-50%);
+}
+
+.panel {
+  width: calc(100% - 48px);
+  max-width: 320px;
+  padding: 20px;
+  text-align: center;
+  background: #fff;
+  border-radius: 20px;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #33616b;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.preview {
+  border-radius: 12px;
+}
+
+.arrow {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  line-height: 1;
+  color: #33616b;
+  background: #abe5eb;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 18px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: #b7b9c9;
+  border-radius: 50%;
+  transition: width 0.2s ease;
+}
+
+.dotActive {
+  width: 16px;
+  background: #3d9db3;
+  border-radius: 3px;
+}
+
+.error {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #d92d20;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel,
+.confirm {
+  flex: 1;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cancel {
+  color: #33616b;
+  background: #f5f2d5;
+}
+
+.confirm {
+  color: #fff;
+  background: #3d9db3;
+}
+
+.cancel:disabled,
+.confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
