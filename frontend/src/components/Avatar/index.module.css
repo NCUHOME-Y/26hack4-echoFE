@@ -5,3 +5,6 @@
   object-fit: cover;
   background: #ebf7ff;
 }
+.square {
+  border-radius: 10px;
+}

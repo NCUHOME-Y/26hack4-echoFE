@@ -1,0 +1,126 @@
+/* 遮罩只盖住 393px 手机画布；Sketch 弹窗没有遮罩色，这里用轻遮罩 */
+.mask {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 393px);
+  background: rgba(17, 17, 17, 0.35);
+  transform: translateX(-50%);
+}
+
+/* 白卡圆角 18 和别的ui图一样的类似风格 */
+.panel {
+  width: calc(100% - 64px);
+  max-width: 320px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 18px;
+  font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}
+
+.title {
+  margin: 26px 0 18px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #595959;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 头像放大后为正方形，圆角跟卡片一致 */
+.preview {
+  border-radius: 18px;
+}
+
+/* 左右轮换按钮沿用主题青色 */
+.arrow {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 1px 7px 1px;
+  width: 32px;
+  height: 32px;
+  font-size: 35px;
+  line-height: 1;
+  color: #33616b;
+  background: #abe5eb;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0 22px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: #d6d6d6;
+  border-radius: 50%;
+  transition: width 0.2s ease;
+}
+
+.dotActive {
+  width: 16px;
+  background: #3d9db3;
+  border-radius: 3px;
+}
+
+.error {
+  margin: 0 16px 12px;
+  font-size: 13px;
+  color: #d92d20;
+}
+
+/* 分割线 + 纯文字按钮 */
+.actions {
+  display: flex;
+  border-top: 1.5px solid #33616b;
+}
+
+.cancel,
+.confirm {
+  flex: 1;
+  height: 48px;
+  font-family: inherit;
+  font-size: 18px;
+  color: #595959;
+  background: #ffffff;
+  border: 0;
+  cursor: pointer;
+}
+
+.cancel {
+  border-radius: 0 0 0 18px;
+}
+
+.confirm {
+  border-radius: 0 0 18px 0;
+}
+
+.cancel:active,
+.confirm:active {
+  background: #f5f2d5;
+}
+
+.cancel:disabled,
+.confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
