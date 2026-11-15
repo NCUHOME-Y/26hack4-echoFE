@@ -1,11 +1,13 @@
 //我的：资料卡+我参与的（关键词搜索、越新越上
 import { useEffect, useState } from 'react'
 import Avatar from '../../components/Avatar'
+import AvatarPicker from '../../components/AvatarPicker'
 import {
   EXP_PER_LEVEL,
   PARTICIPATION_STATUS_TEXT,
   getMe,
   getMyParticipations,
+  updateAvatar,
 } from '../../mock/profile'
 import type { MeProfile, ParticipationItem } from '../../mock/profile'
 import styles from './index.module.css'
@@ -18,6 +20,7 @@ export default function Profile() {
   const [keyword, setKeyword] = useState('')
   const [error, setError] = useState('')
   const [listLoading, setListLoading] = useState(true)
+  const [pickerOpen, setPickerOpen] = useState(false)
 
   //资料只取一次
   useEffect(() => {
@@ -76,7 +79,15 @@ export default function Profile() {
           alt=""
           aria-hidden="true"
         />
-        <Avatar avatar={me?.avatar} size={64} />
+        <button
+          type="button"
+          className={styles.avatarButton}
+          onClick={() => setPickerOpen(true)}
+          aria-label="更换头像"
+        >
+          <Avatar avatar={me?.avatar} size={64} />
+        </button>
+
         <div className={styles.meta}>
           <p className={styles.nickname}>{me?.nickname ?? '…'}</p>
           <p className={styles.level}>等级：{me?.level ?? 0}</p>
@@ -101,6 +112,16 @@ export default function Profile() {
           enterKeyHint="search"
         />
       </div>
+
+      <AvatarPicker
+        open={pickerOpen}
+        value={me?.avatar}
+        onClose={() => setPickerOpen(false)}
+        onConfirm={async (avatar) => {
+          await updateAvatar(avatar)
+          setMe((prev) => (prev ? { ...prev, avatar } : prev))
+        }}
+      />
 
       <section className={styles.listArea}>
         {error && <p className={styles.error}>{error}</p>}
