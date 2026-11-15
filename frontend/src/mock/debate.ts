@@ -167,13 +167,13 @@ function sleep(ms = 300): Promise<void> {
 }
 
 function toDetail(item: DebateItem): DebateDetail {
-  const myVote = MY_VOTES[item.id] ?? null
   return {
     ...item,
     final_option_id: FINAL_OPTION[item.id] ?? null,
     option_count: item.options.length as 2 | 3 | 4,
-    can_vote: myVote === null,
-    my_vote: myVote,
+    // 争议题只读：已结算的题不能再投票，这两个字段只为了对齐接口
+    can_vote: false,
+    my_vote: null,
     asker: { id: 2, nickname: '海螺观察员', avatar: 'avatar-3', level: 12 },
   }
 }
