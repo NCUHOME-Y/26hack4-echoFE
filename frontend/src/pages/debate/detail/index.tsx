@@ -3,6 +3,7 @@ import {useNavigate,useParams} from 'react-router-dom'
 import {getDebateDetail} from '../../../mock/debate'
 import type {DebateDetail} from '../../../mock/debate'
 import styles from './index.module.css'
+import decoPair from '../../../assets/brand/deco2.png'
 
 const LETTERS =['A','B','C','D']
 
@@ -53,6 +54,7 @@ export default function DebateDetail(){
           ←
         </button>
         <h1 className={styles.title}>争议海螺</h1>
+        <img className={styles.decoPair} src={decoPair} alt="" aria-hidden="true" />
       </header>
 
       <div className={styles.board}>
