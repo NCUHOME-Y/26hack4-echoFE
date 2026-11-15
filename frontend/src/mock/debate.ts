@@ -1,9 +1,30 @@
-// 争议海螺列表 mock：字段与后端问题列表接口保持一致
+// 争议海螺 mock：字段严格对齐 openapi.yaml 的 /api/questions/contested 与 /api/questions/{id}
+export interface DebateOption {
+  id: number
+  label: string
+  sort_no: number
+  votes: number
+  percent: number
+}
+
 export interface DebateItem {
   id: number
   description: string
-  picked_count: number
+  status: 'closed'
+  expires_at: string
   created_at: string
+  settled_at: string
+  contested_at: string
+  total_votes: number
+  options: DebateOption[]
+}
+
+export interface DebateDetail extends DebateItem {
+  final_option_id: number | null
+  option_count: 2 | 3 | 4
+  can_vote: boolean
+  my_vote: { option_id: number; created_at: string } | null
+  asker: { id: number; nickname: string; avatar: string; level: number }
 }
 
 function hoursAgo(hours: number): string {
@@ -11,20 +32,184 @@ function hoursAgo(hours: number): string {
 }
 
 const DEBATES: DebateItem[] = [
-  { id: 1, description: '该不该去看这场演唱会', picked_count: 128, created_at: hoursAgo(1) },
-  { id: 2, description: '要不要为了合群参加不想去的聚会', picked_count: 96, created_at: hoursAgo(3) },
-  { id: 3, description: '朋友借的钱一直不还，该开口要吗', picked_count: 87, created_at: hoursAgo(6) },
-  { id: 4, description: '发现室友偷偷用我的东西，要说破吗', picked_count: 74, created_at: hoursAgo(10) },
-  { id: 5, description: '考研还是直接工作', picked_count: 65, created_at: hoursAgo(22) },
-  { id: 6, description: '该不该把前任送的礼物还回去', picked_count: 52, created_at: hoursAgo(30) },
-  { id: 7, description: '周末去图书馆还是在家赶作业', picked_count: 41, created_at: hoursAgo(48) },
-  { id: 8, description: '水杯买粉色还是蓝色', picked_count: 23, created_at: hoursAgo(70) },
+  {
+    id: 1,
+    description: '该不该去看这场演唱会',
+    status: 'closed',
+    expires_at: hoursAgo(2),
+    created_at: hoursAgo(26),
+    settled_at: hoursAgo(2),
+    contested_at: hoursAgo(1),
+    total_votes: 128,
+    options: [
+      { id: 11, label: '去，青春只有一次', sort_no: 1, votes: 62, percent: 48.4 },
+      { id: 12, label: '不去，先把正事做完', sort_no: 2, votes: 48, percent: 37.5 },
+      { id: 13, label: '看情况再说', sort_no: 3, votes: 18, percent: 14.1 },
+    ],
+  },
+  {
+    id: 2,
+    description: '要不要为了合群参加不想去的聚会',
+    status: 'closed',
+    expires_at: hoursAgo(4),
+    created_at: hoursAgo(30),
+    settled_at: hoursAgo(4),
+    contested_at: hoursAgo(3),
+    total_votes: 96,
+    options: [
+      { id: 21, label: '去，别扫大家的兴', sort_no: 1, votes: 49, percent: 51.0 },
+      { id: 22, label: '不去，舒服最重要', sort_no: 2, votes: 47, percent: 49.0 },
+    ],
+  },
+  {
+    id: 3,
+    description: '朋友借的钱一直不还，该开口要吗',
+    status: 'closed',
+    expires_at: hoursAgo(7),
+    created_at: hoursAgo(34),
+    settled_at: hoursAgo(7),
+    contested_at: hoursAgo(6),
+    total_votes: 87,
+    options: [
+      { id: 31, label: '直接开口要', sort_no: 1, votes: 45, percent: 51.7 },
+      { id: 32, label: '再等等，别伤感情', sort_no: 2, votes: 42, percent: 48.3 },
+    ],
+  },
+  {
+    id: 4,
+    description: '发现室友偷偷用我的东西，要说破吗',
+    status: 'closed',
+    expires_at: hoursAgo(11),
+    created_at: hoursAgo(40),
+    settled_at: hoursAgo(11),
+    contested_at: hoursAgo(10),
+    total_votes: 74,
+    options: [
+      { id: 41, label: '说破，边界要讲清楚', sort_no: 1, votes: 35, percent: 47.3 },
+      { id: 42, label: '不说，默默收好自己的东西', sort_no: 2, votes: 39, percent: 52.7 },
+    ],
+  },
+  {
+    id: 5,
+    description: '考研还是直接工作',
+    status: 'closed',
+    expires_at: hoursAgo(24),
+    created_at: hoursAgo(60),
+    settled_at: hoursAgo(24),
+    contested_at: hoursAgo(22),
+    total_votes: 65,
+    options: [
+      { id: 51, label: '考研', sort_no: 1, votes: 34, percent: 52.3 },
+      { id: 52, label: '直接工作', sort_no: 2, votes: 31, percent: 47.7 },
+    ],
+  },
+  {
+    id: 6,
+    description: '该不该把前任送的礼物还回去',
+    status: 'closed',
+    expires_at: hoursAgo(32),
+    created_at: hoursAgo(72),
+    settled_at: hoursAgo(32),
+    contested_at: hoursAgo(30),
+    total_votes: 52,
+    options: [
+      { id: 61, label: '还，断干净', sort_no: 1, votes: 24, percent: 46.2 },
+      { id: 62, label: '留着，也是回忆', sort_no: 2, votes: 28, percent: 53.8 },
+    ],
+  },
+  {
+    id: 7,
+    description: '周末去图书馆还是在家赶作业',
+    status: 'closed',
+    expires_at: hoursAgo(50),
+    created_at: hoursAgo(90),
+    settled_at: hoursAgo(50),
+    contested_at: hoursAgo(48),
+    total_votes: 41,
+    options: [
+      { id: 71, label: '图书馆', sort_no: 1, votes: 22, percent: 53.7 },
+      { id: 72, label: '在家', sort_no: 2, votes: 19, percent: 46.3 },
+    ],
+  },
+  {
+    id: 8,
+    description: '水杯买粉色还是蓝色',
+    status: 'closed',
+    expires_at: hoursAgo(72),
+    created_at: hoursAgo(120),
+    settled_at: hoursAgo(72),
+    contested_at: hoursAgo(70),
+    total_votes: 33,
+    options: [
+      { id: 81, label: '粉色', sort_no: 1, votes: 17, percent: 51.5 },
+      { id: 82, label: '蓝色', sort_no: 2, votes: 16, percent: 48.5 },
+    ],
+  },
 ]
 
-// 最新在上，最多 100 条
+// 海螺公布的最终选择
+const FINAL_OPTION: Record<number, number> = {
+  1: 11,
+  2: 21,
+  3: 31,
+  4: 42,
+  5: 51,
+  6: 62,
+  7: 71,
+  8: 81,
+}
+
+// mock 里记录本次会话投过的票，刷新即重置
+const MY_VOTES: Record<number, { option_id: number; created_at: string }> = {}
+
+function sleep(ms = 300): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function toDetail(item: DebateItem): DebateDetail {
+  const myVote = MY_VOTES[item.id] ?? null
+  return {
+    ...item,
+    final_option_id: FINAL_OPTION[item.id] ?? null,
+    option_count: item.options.length as 2 | 3 | 4,
+    can_vote: myVote === null,
+    my_vote: myVote,
+    asker: { id: 2, nickname: '海螺观察员', avatar: 'avatar-3', level: 12 },
+  }
+}
+
+// 争议海螺列表：按 contested_at 倒序，固定最多 100 条
 export async function getDebates(): Promise<DebateItem[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300))
+  await sleep()
   return [...DEBATES]
-    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .sort((a, b) => b.contested_at.localeCompare(a.contested_at))
     .slice(0, 100)
+}
+
+// 对应 GET /api/questions/{id}
+export async function getDebateDetail(id: number): Promise<DebateDetail> {
+  await sleep()
+  const item = DEBATES.find((question) => question.id === id)
+  if (!item) throw new Error('问题不存在')
+  return toDetail(item)
+}
+
+// 对应 POST /api/questions/{id}/votes
+export async function voteDebate(id: number, optionId: number): Promise<DebateDetail> {
+  await sleep()
+  const item = DEBATES.find((question) => question.id === id)
+  if (!item) throw new Error('问题不存在')
+  if (MY_VOTES[id]) throw new Error('你已经投过票了')
+
+  const option = item.options.find((current) => current.id === optionId)
+  if (!option) throw new Error('选项不存在')
+
+  option.votes += 1
+  item.total_votes += 1
+  item.options.forEach((current) => {
+    current.percent = Math.round((current.votes / item.total_votes) * 1000) / 10
+  })
+  MY_VOTES[id] = { option_id: optionId, created_at: new Date().toISOString() }
+
+  return toDetail(item)
 }

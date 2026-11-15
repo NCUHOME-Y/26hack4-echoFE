@@ -50,7 +50,7 @@ export default function Debate() {
               <li key={item.id} className={styles.card}>
                 <p className={styles.cardText}>{item.description}</p>
                 <div className={styles.cardFoot}>
-                  <span className={styles.meta}>{item.picked_count} 人捡起</span>
+                  <span className={styles.meta}>{item.total_votes} 人捡起</span>
                   <button
                     type="button"
                     className={styles.pickButton}
