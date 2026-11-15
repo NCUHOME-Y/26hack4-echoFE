@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { getDebates } from '../../mock/debate'
 import type { DebateItem } from '../../mock/debate'
 import styles from './index.module.css'
+import decoPair from '../../assets/brand/deco2.png'
 
 export default function Debate() {
   const navigate = useNavigate()
@@ -33,7 +34,9 @@ export default function Debate() {
       <header className={styles.hero}>
         <h1 className={styles.title}>争议海螺</h1>
         <p className={styles.subtitle}>这些难选的问题，你能猜到海螺的想法吗</p>
+        <img className={styles.decoPair} src={decoPair} alt="" aria-hidden="true" />
       </header>
+      <div className={styles.sandTop} aria-hidden="true" />
 
       <section className={styles.listArea}>
         {error && <p className={styles.error}>{error}</p>}
@@ -45,8 +48,9 @@ export default function Debate() {
           <ul className={styles.list}>
             {items.map((item) => (
               <li key={item.id} className={styles.card}>
-                <div className={styles.cardHead}>
-                  <p className={styles.cardText}>{item.description}</p>
+                <p className={styles.cardText}>{item.description}</p>
+                <div className={styles.cardFoot}>
+                  <span className={styles.meta}>{item.picked_count} 人捡起</span>
                   <button
                     type="button"
                     className={styles.pickButton}
@@ -55,12 +59,12 @@ export default function Debate() {
                     捡起海螺
                   </button>
                 </div>
-                <p className={styles.meta}>{item.picked_count} 人捡起</p>
               </li>
             ))}
           </ul>
         )}
       </section>
+        <div className={styles.sandEdge} aria-hidden="true" />
     </div>
   )
 }
