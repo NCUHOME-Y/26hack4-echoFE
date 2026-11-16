@@ -4,6 +4,8 @@ import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './Login.module.css'
 import { login, setToken } from '../../mock/auth'
+import logo from '../../assets/brand/logo-trim.png'
+import clip from '../../assets/brand/decoxie.png'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -55,7 +57,15 @@ export default function Login() {
         </h1>
       </div>
 
+      <div className={styles.logoCard}>
+        <img className={styles.logo} src={logo} alt="logo" />
+      </div>
+
       <div className={styles.spacer} aria-hidden="true" />
+
+      <div className={styles.clipCard}>
+        <img className={styles.clip} src={clip} alt="clip"/>
+      </div>
 
       <section className={styles.card}>
         <div className={styles.seg} role="tablist" aria-label="登录或注册">

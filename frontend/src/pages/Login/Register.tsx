@@ -4,6 +4,8 @@ import type { FormEvent } from 'react'
 import styles from './Login.module.css'
 import { login, register, setToken } from '../../mock/auth'
 import { useNavigate } from 'react-router-dom'
+import logo from '../../assets/brand/logo-trim.png'
+import clip from '../../assets/brand/decoxie.png'
 
 // 账号3–64、昵称7、密码8–64且只能大小写字母和数字
 const PASSWORD_RE = /^[a-zA-Z0-9]{8,64}$/
@@ -74,6 +76,14 @@ export default function Register() {
           <span>为什么</span>
           <span>不问问神奇海螺呢</span>
         </h1>
+      </div>
+
+      <div className={styles.logoCard}>
+        <img className={styles.logo} src={logo} alt="logo" />
+      </div>
+
+      <div className={styles.clipCard}>
+        <img className={styles.clip} src={clip} alt="clip"/>
       </div>
 
       <div className={styles.spacer} aria-hidden="true" />
