@@ -80,7 +80,6 @@
   color: #33616b;
   font-weight: 650;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .cardFoot {
@@ -135,7 +134,7 @@
 /* 底部固定沙色条：不在滚动区内，顶端白色虚线 */
 .sandEdge {
   flex: 0 0 auto;
-  height: 30px;
+  height: 25px;
   background: #f5f2d5;
-  border-top: 2px dashed #ffffff;
+  border-top:  dashed #ffffff;
 }
