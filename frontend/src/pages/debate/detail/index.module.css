@@ -75,13 +75,13 @@
 }
 
 .question {
-  overflow-wrap: anywhere;
-  word-break: break-word;
   margin: 22px 10px 10px 10px;
   font-size: 18px;
   line-height: 1.45;
   font-weight: 650;
   color: #33616b;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .metaRow {

@@ -4,7 +4,7 @@ import { AVATAR_IDS } from '../assets/avatars'
 import { getCurrentUser, saveCurrentUser } from './auth'
 
 export const EXP_PER_LEVEL = 50
-export const MAX_EXP = 9999
+export const MAX_EXP = 9999*50
 
 // 与后端 model.User 的返回字段同名，切换真接口时只换实现
 export interface MeProfile {

@@ -13,7 +13,7 @@ import {
 import type { MeProfile, AnswerItem } from '../../mock/profile'
 import styles from './index.module.css'
 import logoImg from '../../assets/brand/logo-trim.png'
-import decoQuote from '../../assets/brand/deco1.png'
+import decoPair from '../../assets/brand/deco2.png'
 
 export default function Profile() {
   const [me, setMe] = useState<MeProfile | null>(null)
@@ -68,18 +68,7 @@ export default function Profile() {
       </header>
 
       <section className={styles.card}>
-        <img
-          className={`${styles.decoCorner} ${styles.decoCornerLeft}`}
-          src={decoQuote}
-          alt=""
-          aria-hidden="true"
-        />
-        <img
-          className={`${styles.decoCorner} ${styles.decoCornerRight}`}
-          src={decoQuote}
-          alt=""
-          aria-hidden="true"
-        />
+        <img className={styles.decoPair} src={decoPair} alt="" aria-hidden="true" />
         <button
           type="button"
           className={styles.avatarButton}
@@ -103,7 +92,6 @@ export default function Profile() {
       </section>
 
       <div className={styles.searchWrap}>
-        {/*<img className={styles.decoQuote} src={decoQuote} alt="" aria-hidden="true" />*/}
         <input
           className={styles.search}
           type="search"
