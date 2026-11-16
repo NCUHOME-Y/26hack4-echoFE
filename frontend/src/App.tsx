@@ -5,6 +5,8 @@ import Home from './pages/home'
 import BasicLayout from './layouts/BasicLayout'
 import RequireAuth from './components/RequireAuth'
 import Profile from './pages/profile'
+import Debate from './pages/debate'
+import DebateDetailPage from './pages/debate/detail'
 
 function App() {
   return (
@@ -15,10 +17,11 @@ function App() {
 
       <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
             <Route path="/home" element={<Home />} />
-            <Route path="/debate" element={<div style={{ padding: 24 }}>争议（待做）</div>} />
+            <Route path="/debate" element={<Debate />} />
+            <Route path="/debate/:id" element={<DebateDetailPage />} />
             <Route path="/shell" element={<div style={{ padding: 24 }}>海螺（待做）</div>} />
-                        <Route path="/profile" element={<Profile />} />
-            </Route>
+            <Route path="/profile" element={<Profile />} />
+      </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

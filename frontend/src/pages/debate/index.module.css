@@ -1,0 +1,141 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #abe5eb;
+  font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}
+
+.hero {
+  position: relative;
+  padding: 18px 22px 22px;
+}
+/* 在青色和沙色交界线上的引号，不参与布局 */
+.decoPair {
+  position: absolute;
+  right: 14px;
+  bottom: -22px;
+  z-index: 1;
+  width: 90px;
+  pointer-events: none;
+  user-select: none;
+}
+.title {
+  margin: 28px 0 0;
+  font-size: 34px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  font-size: 15px;
+  font-weight: 550;
+  color: #000000;
+}
+
+/* 沙色列表区，仅这里滚动 */
+.listArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 22px;
+  background: #f5f2d5;
+
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 126px;
+  padding: 18px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 0 0 rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.06);
+}
+
+
+.cardText {
+  display: -webkit-box;
+
+  margin: 0;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #33616b;
+  font-weight: 650;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pickButton {
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  color: #ffffff;
+  background: #3d9db3;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.meta {
+  margin: 0;
+  font-size: 13px;
+  color: #000000;
+}
+
+.empty,
+.error {
+  margin: 28px 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.empty {
+  color: #707d80;
+}
+
+.error {
+  color: #d92d20;
+}
+/*顶部的沙色条*/
+.sandTop {
+  flex: 0 0 auto;
+  height: 25px;
+  background: #f5f2d5;
+  border-radius: 16px 16px 0 0;
+  
+}
+
+/* 底部固定沙色条：不在滚动区内，顶端白色虚线 */
+.sandEdge {
+  flex: 0 0 auto;
+  height: 30px;
+  background: #f5f2d5;
+  border-top: 2px dashed #ffffff;
+}
