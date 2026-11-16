@@ -45,7 +45,7 @@
   overscroll-behavior: contain;
   padding: 16px 22px;
   background: #f5f2d5;
-
+  scrollbar-width: none;
 }
 
 .list {

@@ -7,16 +7,17 @@ import {
   PARTICIPATION_STATUS_TEXT,
   getMe,
   getMyParticipations,
+  participationStatus,
   updateAvatar,
 } from '../../mock/profile'
-import type { MeProfile, ParticipationItem } from '../../mock/profile'
+import type { MeProfile, AnswerItem } from '../../mock/profile'
 import styles from './index.module.css'
 import logoImg from '../../assets/brand/logo-trim.png'
 import decoQuote from '../../assets/brand/deco1.png'
 
 export default function Profile() {
   const [me, setMe] = useState<MeProfile | null>(null)
-  const [items, setItems] = useState<ParticipationItem[]>([])
+  const [items, setItems] = useState<AnswerItem[]>([])
   const [keyword, setKeyword] = useState('')
   const [error, setError] = useState('')
   const [listLoading, setListLoading] = useState(true)
@@ -112,6 +113,7 @@ export default function Profile() {
           enterKeyHint="search"
         />
       </div>
+      <div className={styles.sandTop} aria-hidden="true" />
 
       <AvatarPicker
         open={pickerOpen}
@@ -131,17 +133,21 @@ export default function Profile() {
           <p className={styles.empty}>没有找到相关的海螺</p>
         ) : (
           <ul className={styles.list}>
-            {items.map((item) => (
-              <li key={item.id} className={styles.item}>
-                <span className={styles.itemText}>{item.description}</span>
-                <span className={`${styles.badge} ${styles[item.status]}`}>
-                  {PARTICIPATION_STATUS_TEXT[item.status]}
-                </span>
-              </li>
-            ))}
+  {items.map((item) => {
+    const status = participationStatus(item)
+    return (
+      <li key={item.question_id} className={styles.item}>
+        <span className={styles.itemText}>{item.description}</span>
+        <span className={`${styles.badge} ${styles[status]}`}>
+          {PARTICIPATION_STATUS_TEXT[status]}
+        </span>
+      </li>
+    )
+  })}
           </ul>
         )}
       </section>
+      <div className={styles.sandBottom} aria-hidden="true" />
     </div>
   )
 }

@@ -34,7 +34,7 @@ function hoursAgo(hours: number): string {
 const DEBATES: DebateItem[] = [
   {
     id: 1,
-    description: '该不该去看这场演唱会',
+    description: '傍晚的风轻轻拂过窗台，带走一点白日的燥热。静下心来看看周遭，日子平淡却也藏着细碎温柔。不必总追赶远方，偶尔放慢脚步，喝杯水，发会儿呆，接纳所有不完美。好好照顾自己，认真对待三餐与睡眠，在平凡时光里慢慢积攒属于自己的光亮，稳步向前就很好。',
     status: 'closed',
     expires_at: hoursAgo(2),
     created_at: hoursAgo(26),

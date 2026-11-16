@@ -150,7 +150,12 @@
   overscroll-behavior: contain;
   padding: 23px 25px 24px;
   background: #f5f2d5;
-  border-radius: 24px 24px 0 0;
+
+  scrollbar-width: none;
+}
+
+.listArea::-webkit-scrollbar {
+  display: none;
 }
 
 .list {
@@ -160,7 +165,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  scrollbar-width: none;
 }
+
+
 
 .item {
   display: flex;
@@ -228,4 +236,17 @@
   border: 0;
   border-radius: 50%;
   cursor: pointer;
+}
+/*顶部的沙色条*/
+.sandTop {
+  flex: 0 0 auto;
+  height: 25px;
+  background: #f5f2d5;
+  border-radius: 16px 16px 0 0;
+}
+.sandBottom {
+  flex: 0 0 auto;
+  height: 25px;
+  background: #f5f2d5;
+  border-top: dashed #fff;
 }
