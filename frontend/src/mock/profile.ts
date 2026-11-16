@@ -102,7 +102,7 @@ function hoursAgo(hours: number): string {
 
 // 预置的参与记录；真实数据由后端返回，这里只负责让页面先跑起来
 const ANSWERS: AnswerItem[] = [
-  { question_id: 101, description: '周末去图书馆还是在家赶作业', status: 'closed', my_option_id: 1, my_option_label: '图书馆', final_option_id: 1, matched: true, voted_at: hoursAgo(2), settled_at: hoursAgo(1) },
+  { question_id: 101, description: '测试一下打很多字的情况1234567890123456789012345678901234567890周末去图书馆还是在家赶作业', status: 'closed', my_option_id: 1, my_option_label: '图书馆', final_option_id: 1, matched: true, voted_at: hoursAgo(2), settled_at: hoursAgo(1) },
   { question_id: 102, description: '换新手机还是攒钱换电脑', status: 'open', my_option_id: 2, my_option_label: '换电脑', final_option_id: null, matched: null, voted_at: hoursAgo(5), settled_at: null },
   { question_id: 103, description: '我该逃掉重要的专业课去看演唱会吗', status: 'closed', my_option_id: 1, my_option_label: '不逃课', final_option_id: 2, matched: false, voted_at: hoursAgo(26), settled_at: hoursAgo(20) },
   { question_id: 104, description: '水杯买粉色还是蓝色', status: 'closed', my_option_id: 1, my_option_label: '粉色', final_option_id: null, matched: null, voted_at: hoursAgo(50), settled_at: hoursAgo(48) },
