@@ -1,0 +1,267 @@
+@font-face {
+  font-family: 'alimama';
+  src: url('../../assets/font/alimama.ttf') format('truetype');
+  font-display: swap;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #abe5eb;
+  font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}
+
+/* 头部 */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px 34px;
+}
+
+.decoPair {
+  position: absolute;
+  top: 90px;
+  left: 40px;
+  z-index: 1;
+  width: 90px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
+  margin-top: 28px;
+  font-size: 30px;
+  line-height: 1;
+  color: #000000;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.title {
+  margin: 28px 0 0;
+  font-size: 25px;
+  font-weight: 600;
+  color: #000000;
+}
+
+/* 经验条 */
+.expWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 145px;
+  margin: 0 0 10px auto;
+}
+
+.level {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 650;
+  color: #33616b;
+}
+
+.expBar {
+  flex: 1;
+  height: 15px;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 999px;
+}
+
+.expFill {
+  display: block;
+  height: 100%;
+  background: #3d9db3;
+  border-radius: 999px;
+  transition: width 0.25s;
+}
+
+.expText {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: #33616b;
+}
+
+/* 问题 */
+.board {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 32px 22px 24px;
+  background: #f5f2d5;
+  border-radius: 18px 18px 0 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 4px 0 22px;
+  padding: 18px 20px 14px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.question {
+  display: -webkit-box;
+  margin: 6px 10px 2px;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.45;
+  color: #33616b;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.metaRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.badge {
+  padding: 2px 10px;
+  font-size: 16px;
+  color: #ffffff;
+  background: #3d9db3;
+  border-radius: 10px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 17px 5px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.option {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 95%;
+  min-height: 52px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #33616b;
+  text-align: left;
+  background: #e3e3e3;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.option:active {
+  background: #d9d9d9;
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+
+.optionSelected {
+  color: #0d4f5e;
+  background: #abe5eb;
+  border-color: #3d9db3;
+}
+
+.optionMine {
+  color: #ffffff;
+  background: #3d9db3;
+  border-color: #3d9db3;
+}
+
+.letter {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  color: #000000;
+  background: #ffffff;
+  border-radius: 6px;
+}
+
+.optionMine .letter {
+  color: #3d9db3;
+  border: 2px solid #33616b;
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.percent {
+  flex: 0 0 auto;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.expireRow {
+  margin: 10px 10px 0;
+  font-size: 14px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
+  color: #747474;
+}
+
+
+.sandEdge {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 24px 104px;
+  background: #f5f2d5;
+}
+
+.confirm {
+  flex: 0 0 auto;
+  height: 60px;
+  padding: 0 32px;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 650;
+  color: #ffffff;
+  background: #3d9db3;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 8px 18px rgba(0, 0, 0, 0.16);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.confirm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+

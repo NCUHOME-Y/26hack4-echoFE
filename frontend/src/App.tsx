@@ -7,6 +7,7 @@ import RequireAuth from './components/RequireAuth'
 import Profile from './pages/profile'
 import Debate from './pages/debate'
 import DebateDetailPage from './pages/debate/detail'
+import Question from './pages/question'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/ask" element={<div style={{ padding: 24 }}>提问（待做）</div>} />
+      <Route path="/question" element={<Question />} />
 
       <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
             <Route path="/home" element={<Home />} />
