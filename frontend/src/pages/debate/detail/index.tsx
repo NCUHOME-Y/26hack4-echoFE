@@ -20,6 +20,8 @@ export default function DebateDetail(){
     let cancelled = false
     setLoading(true)
     setError('')
+    setDetail(null)   //题先清旧题 避免旧内容闪一下
+    setGuessed(null)  //重置竞猜 否则新题一进来就显示答案
     getDebateDetail(Number(id))
       .then((data) => {
         if (!cancelled) setDetail(data)
