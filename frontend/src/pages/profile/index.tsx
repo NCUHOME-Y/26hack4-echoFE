@@ -91,12 +91,13 @@ export default function Profile() {
 
         <div className={styles.meta}>
           <p className={styles.nickname}>{me?.nickname ?? '…'}</p>
-          <p className={styles.level}>等级：{me?.level ?? 0}</p>
+          <p className={styles.account}>@{me?.account ?? '—'}</p>
+          
           <div className={styles.progress}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
-          <p className={styles.progressText}>
-            {me ? `${me.level_progress}/${EXP_PER_LEVEL}` : `0/${EXP_PER_LEVEL}`}
+          <p className={styles.level}>
+            {me ? `lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}` : 'lv— —/50'}
           </p>
         </div>
       </section>
