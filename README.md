@@ -1,5 +1,4 @@
 # 26hack4-echoFE
-# 26hack4-echoFE
 
 2026 Hackweek 第 4 组 · 回声 · 前端仓库
 
