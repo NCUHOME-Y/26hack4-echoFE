@@ -67,7 +67,7 @@ export default function Home() {
           role="button"
           tabIndex={0}
         >
-          冲刷<br />海滩
+          冲刷<br/>海滩
         </div>
       </div>
 
