@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '../assets/avatars'
+import { DEFAULT_AVATAR, avatarUrl } from '../assets/avatars'
 import { getCurrentUser, saveCurrentUser } from './auth'
 
 export const EXP_PER_LEVEL = 50    
@@ -49,6 +49,190 @@ export function levelInfo(exp: number) {
   }
 }
 
+// ================= 评论区 =================
+export const COMMENT_MAX_LEN = 32     // 单条评论最多 32 个字
+export const MAX_COMMENTS = 50        // 一个海螺下最多留 50 条
+export const MAX_PER_USER = 5         // 每个人最多发 5 条（发问者不限）
+
+export interface AnswerComment {
+  id: number
+  question_id: number
+  content: string
+  created_at: string
+  status: 'pending' | 'live'   // pending = 审核中，别人还看不到
+  is_author: boolean           // 这条是不是发问者写的
+  mine: boolean                // 这条是不是当前用户写的
+  exp: number                  // 写评论那一刻作者的经验，用来算等级
+  avatar: string               // 头像由后端给；没有头像的用户后端发默认头像
+}
+
+// 页面拿到的是"加工过"的评论：多算了一个当前等级
+export interface CommentView extends AnswerComment {
+  level: number
+}
+
+let commentSeq = 100
+
+// 专门留一只「没有评论」的海螺，用来验证评论区空态；改这个数字就能换题
+export const EMPTY_COMMENT_QUESTION_ID = 93
+
+// 每道题下面预置几条评论（一条是发问者的）
+function createSeedComments(questionId: number): AnswerComment[] {
+  // 这一道题故意不给评论：投票后评论区应该显示「这只海螺期待听到你的想法」
+  if (questionId === EMPTY_COMMENT_QUESTION_ID) return []
+  const now = Date.now()
+  return [
+    {
+      id: ++commentSeq,
+      question_id: questionId,
+      content: '这只海螺我捡起来又放下了',
+      created_at: new Date(now - 40 * 60000).toISOString(),
+      status: 'live',
+      is_author: true,
+      mine: false,
+      exp: 628,
+      avatar: avatarUrl('avatar-3'),
+    },
+    {
+      id: ++commentSeq,
+      question_id: questionId,
+      content: '选第二个，经历过就懂了',
+      created_at: new Date(now - 70 * 60000).toISOString(),
+      status: 'live',
+      is_author: false,
+      mine: false,
+      exp: 156,
+      avatar: avatarUrl('avatar-5'),
+    },
+    {
+      id: ++commentSeq,
+      question_id: questionId,
+      content: '原来不止我一个人在想这个',
+      created_at: new Date(now - 130 * 60000).toISOString(),
+      status: 'live',
+      is_author: false,
+      mine: false,
+      exp: 43,
+      avatar: avatarUrl('avatar-7'),
+    },
+  ]
+}
+
+const COMMENT_STORE: Record<number, AnswerComment[]> = {}
+
+function commentsOf(questionId: number): AnswerComment[] {
+  if (!COMMENT_STORE[questionId]) {
+    COMMENT_STORE[questionId] = createSeedComments(questionId)
+  }
+  return COMMENT_STORE[questionId]
+}
+
+// 排序：发问者的评论永远在最上面；同组里越新越靠前
+function toView(list: AnswerComment[]): CommentView[] {
+  return list
+    .map((c) => {
+      // 自己的评论用当前经验和头像，升级/换头像后显示会跟着变
+      if (c.mine) {
+        const me = getMe()
+        return { ...c, exp: me.exp, avatar: avatarUrl(me.avatar), level: levelInfo(me.exp).level }
+      }
+      return { ...c, level: levelInfo(c.exp).level }
+    })
+    .sort((a, b) => {
+      if (a.is_author !== b.is_author) return a.is_author ? -1 : 1
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    })
+}
+
+// 进入评论区取一次快照：只拿一次，之后不实时同步别人的新增/删除
+export function getComments(questionId: number): Promise<CommentView[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(toView(commentsOf(questionId)))
+    }, 300)
+  })
+}
+
+export function addComment(questionId: number, content: string): Promise<CommentView[]> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const text = content.trim()
+      if (!text) {
+        reject(new Error('说点什么再发'))
+        return
+      }
+      if (text.length > COMMENT_MAX_LEN) {
+        reject(new Error(`最多 ${COMMENT_MAX_LEN} 个字`))
+        return
+      }
+
+      const list = commentsOf(questionId)
+      const question = QUESTION_RUNTIME[questionId]
+      const isAuthor = question ? question.is_author : false
+
+      if (!isAuthor) {
+        const mineCount = list.filter((c) => c.mine).length
+        if (mineCount >= MAX_PER_USER) {
+          reject(new Error(`每个人最多只能发 ${MAX_PER_USER} 条`))
+          return
+        }
+      }
+
+      list.push({
+        id: ++commentSeq,
+        question_id: questionId,
+        content: text,
+        created_at: new Date().toISOString(),
+        status: 'pending',   // 先挂审核，别人暂时看不到（自己看得到并标「审核中」）
+        is_author: isAuthor,
+        mine: true,
+        exp: getMe().exp,
+        // 头像走后端：没设头像的用户后端给默认头像，这里用 avatarUrl 兜底
+        avatar: avatarUrl(getMe().avatar),
+      })
+
+      // 超过 50 条，把最早那条裁掉
+      if (list.length > MAX_COMMENTS) {
+        const oldest = list.reduce(
+          (minIndex, c, i, arr) =>
+            new Date(c.created_at).getTime() < new Date(arr[minIndex].created_at).getTime()
+              ? i
+              : minIndex,
+          0,
+        )
+        list.splice(oldest, 1)
+      }
+
+      resolve(toView(list))
+    }, 300)
+  })
+}
+
+export function deleteComment(questionId: number, commentId: number): Promise<CommentView[]> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const list = commentsOf(questionId)
+      const target = list.find((c) => c.id === commentId)
+      if (!target) {
+        reject(new Error('这条评论已经不在了'))
+        return
+      }
+
+      const question = QUESTION_RUNTIME[questionId]
+      const isAuthor = question ? question.is_author : false
+
+      // 只能删自己的；发问者可以删自己问题下的所有
+      if (!target.mine && !isAuthor) {
+        reject(new Error('只能删自己的评论'))
+        return
+      }
+
+      list.splice(list.indexOf(target), 1)
+      resolve(toView(list))
+    }, 250)
+  })
+}
+
 
 // 回收时长
 function chineseNumber(n: number) {
@@ -87,8 +271,8 @@ const QUESTION_POOL: QuestionSeed[] = [
     id: 88,
     title: '问题，最多一百零二字（真的有人写那么多吗）',
     options: [
-      { id: 1, text: '选项一：选项十八个字', votes: 12 },
-      { id: 2, text: '选项二：最长十八字', votes: 7 },
+      {id: 1, text: '1', votes: 4},
+      {id: 2, text: '2', votes: 5},
     ],
     is_author: false,
     created_minutes_ago: 10,
@@ -184,23 +368,31 @@ function clone(q: AnswerQuestion): AnswerQuestion {
 }
 
 
-// 随机抽一道：连续抽到同一道的话顺延一个，免得看起来像没随机
-export function getQuestion(): Promise<AnswerQuestion> {
+// 已经推送过的题目 id：这次进页面后不再重复推送
+const USED_IDS: number[] = []
+
+// 从没推送过的题里随机抽一道；全部推送完就返回 null
+export function getQuestion(): Promise<AnswerQuestion | null> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      let index = Math.floor(Math.random() * QUESTION_POOL.length)
-      const seed = QUESTION_POOL[index]
-      if (QUESTION_POOL.length > 1 && current && seed.id === current.id) {
-        index = (index + 1) % QUESTION_POOL.length
+      const left = QUESTION_POOL.filter((seed) => !USED_IDS.includes(seed.id))
+
+      // 题库里一道没剩的了
+      if (left.length === 0) {
+        current = null
+        resolve(null)
+        return
       }
 
-      const picked = QUESTION_POOL[index]
+      const picked = left[Math.floor(Math.random() * left.length)]
+      USED_IDS.push(picked.id)
+
       let question = QUESTION_RUNTIME[picked.id]
       if (!question) {
         question = buildQuestion(picked)
         QUESTION_RUNTIME[picked.id] = question
       }
-      question.exp = getMe().exp   
+      question.exp = getMe().exp
       current = question
       resolve(clone(question))
     }, 300)

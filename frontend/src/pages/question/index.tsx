@@ -1,17 +1,21 @@
-// 选择页面
-import { useEffect, useState } from 'react'
+// 答题页
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './index.module.css'
 import decoPair from '../../assets/brand/deco2.png'
 import {
   EXP_PER_LEVEL,
+  COMMENT_MAX_LEN,
   getMe,
   levelInfo,
   getQuestion,
   submitVote,
   recycleLabel,
+  getComments,
+  addComment,
+  deleteComment,
 } from '../../mock/question'
-import type { AnswerQuestion } from '../../mock/question'
+import type { AnswerQuestion, CommentView } from '../../mock/question'
 
 const LETTERS = ['A', 'B', 'C', 'D']
 
@@ -23,19 +27,39 @@ export default function Answer() {
   const [selected, setSelected] = useState<number | null>(null)
   const [voted, setVoted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [empty, setEmpty] = useState(false)
 
-  // 抽新的随机题
+  const [comments, setComments] = useState<CommentView[]>([])
+  const [draft, setDraft] = useState('')
+  const [commentError, setCommentError] = useState('')
+  const [confirmId, setConfirmId] = useState<number | null>(null)
+  const pressTimer = useRef<number | null>(null)
+
   function loadQuestion() {
     getQuestion().then((q) => {
+      if (!q) {
+        setQuestion(null)
+        setEmpty(true)
+        return
+      }
       setQuestion(q)
       setSelected(null)
       setVoted(false)
+      setComments([])
+      setDraft('')
+      setCommentError('')
+      setConfirmId(null)
     })
   }
 
   useEffect(() => {
     loadQuestion()
   }, [])
+
+  useEffect(() => {
+    if (!voted || !question) return
+    getComments(question.id).then(setComments)
+  }, [voted, question])
 
   const exp = question ? question.exp : me.exp
   const { level, progress } = levelInfo(exp)
@@ -61,9 +85,45 @@ export default function Answer() {
     loadQuestion()
   }
 
+  // 发评论
+  async function handleSend() {
+    if (!question || !draft.trim()) return
+    try {
+      const list = await addComment(question.id, draft)
+      setComments(list)
+      setDraft('')
+      setCommentError('')
+    } catch (err) {
+      setCommentError(err instanceof Error ? err.message : '发送失败')
+    }
+  }
+
+  async function handleDelete(commentId: number) {
+    if (!question) return
+    try {
+      const list = await deleteComment(question.id, commentId)
+      setComments(list)
+      setConfirmId(null)
+      setCommentError('')
+    } catch (err) {
+      setCommentError(err instanceof Error ? err.message : '删除失败')
+      setConfirmId(null)
+    }
+  }
+
+  // 长按弹出删除评论确认框
+  function startPress(commentId: number) {
+    if (pressTimer.current) clearTimeout(pressTimer.current)
+    pressTimer.current = window.setTimeout(() => setConfirmId(commentId), 500)
+  }
+
+  function cancelPress() {
+    if (pressTimer.current) clearTimeout(pressTimer.current)
+  }
+
   return (
     <div className={styles.page}>
-      <header className={styles.hero}>
+      <header className={styles.head}>
         <button
           type="button"
           className={styles.back}
@@ -73,6 +133,19 @@ export default function Answer() {
           ←
         </button>
         <h1 className={styles.title}>随机海螺</h1>
+
+        {/* 投票确认后下一只 */}
+        {!empty && voted && (
+          <button
+            type="button"
+            className={styles.nextBtn}
+            disabled={submitting}
+            onClick={handleNext}
+          >
+            下一只
+          </button>
+        )}
+
         <img className={styles.decoPair} src={decoPair} alt="" aria-hidden="true" />
       </header>
 
@@ -98,7 +171,6 @@ export default function Answer() {
                 <span className={styles.badge}>{voted ? '已投票' : '投票中'}</span>
               </div>
             </section>
-            
 
             <div className={styles.options}>
               {question.options.map((o, index) => {
@@ -127,19 +199,91 @@ export default function Answer() {
               })}
             </div>
 
-            <p className={styles.expireRow}>
-              海螺回收时间：{recycleLabel(question.created_at, question.expires_at)}
-            </p>
+            {!voted && (
+              <p className={styles.expireRow}>
+                海螺回收时间：{recycleLabel(question.created_at, question.expires_at)}
+              </p>
+            )}
+
+            {voted && (
+              <section className={styles.verdict}>
+                <p className={styles.verdictTitle}>海螺最终的真实选择：</p>
+                <p className={styles.verdictText}>
+                  海螺将在{recycleLabel(question.created_at, question.expires_at)}被收回。
+                </p>
+              </section>
+            )}
+
+            {/* 评论区 */}
+            {voted && (
+              <section className={styles.comments}>
+                <div className={styles.commentHead}>
+                  <h2 className={styles.commentTitle}>大家怎么说</h2>
+                  <span className={styles.commentCount}>共 {comments.length} 条评论</span>
+                </div>
+
+                {comments.length === 0 ? (
+                  <p className={styles.commentEmpty}>这只海螺期待听到你的想法</p>
+                ) : (
+                  <ul className={styles.commentList}>
+                    {comments.map((c) => (
+                      <li
+                        key={c.id}
+                        className={styles.comment}
+                        onPointerDown={() => {
+                          if (c.mine || question.is_author) startPress(c.id)
+                        }}
+                        onPointerUp={cancelPress}
+                        onPointerLeave={cancelPress}
+                        onPointerCancel={cancelPress}
+                      >
+                        {/* 匿名 */}
+                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+
+                        <div className={styles.commentBody}>
+                          <div className={styles.commentMeta}>
+                            <span className={styles.commentName}>匿名海螺</span>
+                            {/* 审核 */}
+                            <span className={styles.commentLevel}>lv{c.level}</span>
+                          </div>
+                          <p className={styles.commentText}>{c.content}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className={styles.commentEditor}>
+                  <input
+                    className={styles.commentInput}
+                    value={draft}
+                    maxLength={COMMENT_MAX_LEN}
+                    placeholder="说点什么…"
+                    onChange={(e) => setDraft(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className={styles.sendBtn}
+                    disabled={!draft.trim()}
+                    onClick={handleSend}
+                  >
+                    发送
+                  </button>
+                </div>
+
+                <p className={styles.counter}>
+                  {draft.length}/{COMMENT_MAX_LEN}
+                </p>
+                {commentError && <p className={styles.commentError}>{commentError}</p>}
+              </section>
+            )}
           </>
         )}
       </div>
 
-      <footer className={styles.sandEdge}>
-        {voted ? (
-          <button type="button" className={styles.confirm} onClick={handleNext}>
-            下一只
-          </button>
-        ) : (
+      {/* 投票按钮 */}
+      {!empty && !voted && (
+        <footer className={styles.sandEdge}>
           <button
             type="button"
             className={styles.confirm}
@@ -148,8 +292,41 @@ export default function Answer() {
           >
             确认投票
           </button>
-        )}
-      </footer>
+        </footer>
+      )}
+
+      {/* 海螺空态 */}
+      {empty && (
+        <div className={styles.emptyBox}>
+          <p className={styles.emptyText}>海里已经没有海螺了</p>
+        </div>
+      )}
+
+      {/* 删除评论 */}
+      {confirmId !== null && (
+        <div className={styles.confirmMask}>
+          <div className={styles.confirmBox}>
+            <p className={styles.confirmText}>确定删除评论吗</p>
+            <div className={styles.confirmDivider} />
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                onClick={() => setConfirmId(null)}
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                className={styles.dangerBtn}
+                onClick={() => handleDelete(confirmId)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
