@@ -75,7 +75,6 @@ export default function Profile() {
           aria-hidden="true"
         />
         <img
-          className={`${styles.decoCorner} ${styles.decoCornerRight}`}
           src={decoQuote}
           alt=""
           aria-hidden="true"
