@@ -6,6 +6,10 @@ import debateIcon from '../../assets/TabBar/debate.png'
 import askIcon from '../../assets/TabBar/ask.png'
 import shellIcon from '../../assets/TabBar/shell.png'
 import profileIcon from '../../assets/TabBar/profile.png'
+import homeActiveIcon from '../../assets/TabBar/home-active.png'
+import debateActiveIcon from '../../assets/TabBar/debate-active.png'
+import shellActiveIcon from '../../assets/TabBar/shell-active.png'
+import profileActiveIcon from '../../assets/TabBar/profile-active.png'
 
 
 export default function TabBar() {
@@ -19,6 +23,7 @@ export default function TabBar() {
       >
         <span className={styles.iconBox}>
           <img className={styles.icon} src={homeIcon} alt="" />
+          <img className={styles.iconActive} src={homeActiveIcon} alt="" />
         </span>
         <span className={styles.label}>海滩</span>
       </NavLink>
@@ -29,6 +34,7 @@ export default function TabBar() {
       >
         <span className={styles.iconBox}>
           <img className={styles.icon} src={debateIcon} alt="" />
+          <img className={styles.iconActive} src={debateActiveIcon} alt="" />
         </span>
         <span className={styles.label}>争议</span>
         
@@ -44,6 +50,7 @@ export default function TabBar() {
       >
         <span className={styles.iconBox}>
           <img className={styles.icon} src={shellIcon} alt="" />
+          <img className={styles.iconActive} src={shellActiveIcon} alt="" />
         </span>
         <span className={styles.label}>海螺</span>
         
@@ -55,6 +62,7 @@ export default function TabBar() {
       >
         <span className={styles.iconBox}>
           <img className={styles.icon} src={profileIcon} alt="" />
+          <img className={styles.iconActive} src={profileActiveIcon} alt="" />
         </span>
         <span className={styles.label}>我的</span>
         
