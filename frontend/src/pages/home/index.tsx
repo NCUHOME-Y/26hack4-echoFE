@@ -10,7 +10,6 @@ import clipLeft from '../../assets/brand/deco-1.png'
 import clipCenter from '../../assets/brand/deco-2.png'
 import clipRight from '../../assets/brand/deco-3.png'
 import shellLogo from '../../assets/brand/shell.png'
-import arrow from '../../assets/home/vector-p.png'
 import statsIcon from '../../assets/home/Vector-2.png'
 
 
@@ -87,13 +86,9 @@ export default function Home() {
                 className={styles.disputeCard}
                 onClick={() => navigate('/debate')}
               >
-                <h3 className={styles.disputeTitle}>{item.title}</h3>
+                <h3 className={styles.disputeTitle}>争议海螺</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
                 <p className={styles.disputeText}>{item.summary}</p>
-                <div className={styles.waitingText}>
-                  <img className={styles.disputeArrow} src={arrow} alt="" aria-hidden="true" />
-                  <p className={styles.disputeMore}>等待你的关键一票</p>
-                </div>
               </article>
             ))}
           </div>

@@ -207,8 +207,6 @@
   line-height: 1.4;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 限制 2 行 */
-  line-clamp: 2;
   overflow: hidden;
 }
 
@@ -220,12 +218,11 @@
   font-weight: 500;
   line-height: 1.55;
   color: #6b7a89;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; 
   overflow: hidden;
 }
 
@@ -238,21 +235,6 @@
   z-index: 1;
 }
 
-.waitingText {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  bottom: 8px;
-  right: 20px;
-  font-size: 12px;
-  color: #b7b7b7;
-}
-.disputeArrow {
-  width: 6px;
-  margin-right: 8px;
-  object-fit: contain;
-} 
-
 
 
 /* 数据 */
@@ -261,9 +243,9 @@
   background-color: #9AECF5;
   border-radius: 18px 18px 0 0;     
   padding: 2px;
-  padding-bottom: 50px;
+  padding-bottom: 0;
   margin-top: 24px;
-  margin-bottom: 16px;
+  margin-bottom: 0px;
   margin-left: -16px;
   margin-right: -16px;
 }
@@ -271,7 +253,7 @@
 .statsTitle {
   display: flex;
   align-items: center;
-  margin: 0 0 12px 0;
+  margin:12px 12px 0;
   font-size: 16px;
   font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 700;
@@ -288,12 +270,19 @@
 
 .stats {
   display: flex;
+  position: relative;
   justify-content: space-around; 
-  background-image: linear-gradient(to right, #ffffff 50%, transparent 50%);
-  background-position: bottom;
-  background-size: 30px 2px; 
-  background-repeat: repeat-x;
-  padding-bottom: 20px;
+  padding-bottom:15px;
+}
+
+.stats::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: repeating-linear-gradient(to right, #ffffff, #fff 10px, transparent 10px, transparent 20px);
 }
 
 .stat {
@@ -308,22 +297,22 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 20%;
+  top: 10%;
   height: 80%;
   width: 3px;
   background-color: #D4A5A5; 
 }
 
 .statLabel {
-  margin: 0;
-  font-size: 14px;
+  margin-top: 5px;
+  font-size: 16px;
   font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   color: #595959;
   font-weight: 500;
 }
 
 .statValue {
-  margin: 4px 0;
+  margin-top: 0 ;
   font-size: 25px; 
   font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 600;
@@ -332,8 +321,8 @@
 }
 
 .statUnit {
-  margin: 0;
-  font-size: 12px;
+  margin-top: 0;
+  font-size: 16px;
   font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   color: #595959;
 }
