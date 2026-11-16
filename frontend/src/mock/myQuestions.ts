@@ -26,7 +26,7 @@ function hoursAgo(hours: number): string {
 }
 
 const MY_QUESTIONS: MyQuestion[] = [
-  { id: 201, description: '周末去图书馆还是在家赶作业', status: 'open', expires_at: hoursAgo(-5), created_at: hoursAgo(3), settled_at: null, contested_at: null, total_votes: 12 },
+  { id: 201, description: '测试一下打很多字的情况12345678901234567890123456789012345678901234567890周末去图书馆还是在家赶作业', status: 'open', expires_at: hoursAgo(-5), created_at: hoursAgo(3), settled_at: null, contested_at: null, total_votes: 12 },
   { id: 202, description: '换新手机还是攒钱换电脑', status: 'open', expires_at: hoursAgo(-20), created_at: hoursAgo(4), settled_at: null, contested_at: null, total_votes: 8 },
   { id: 203, description: '水杯买粉色还是蓝色', status: 'closed', expires_at: hoursAgo(2), created_at: hoursAgo(26), settled_at: hoursAgo(2), contested_at: null, total_votes: 34 },
   { id: 204, description: '要不要为了合群参加不想去的聚会', status: 'closed', expires_at: hoursAgo(6), created_at: hoursAgo(30), settled_at: hoursAgo(6), contested_at: hoursAgo(6), total_votes: 96 },

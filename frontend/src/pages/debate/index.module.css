@@ -72,14 +72,16 @@
 
 .cardText {
   display: -webkit-box;
-
-  margin: 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
+  overflow-wrap: anywhere;
+  margin: 0;
   font-size: 16px;
   line-height: 1.4;
   color: #33616b;
   font-weight: 650;
-  -webkit-box-orient: vertical;
 }
 
 .cardFoot {
