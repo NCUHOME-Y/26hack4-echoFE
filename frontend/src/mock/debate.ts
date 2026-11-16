@@ -18,6 +18,12 @@ export interface DebateItem {
   total_votes: number
   options: DebateOption[]
 }
+// 与 /api/questions/contested 的 data 结构一致
+export interface PageResult<T> {
+  list: T[]
+  returned: number
+  total: number
+}
 
 export interface DebateDetail extends DebateItem {
   final_option_id: number | null
@@ -159,8 +165,6 @@ const FINAL_OPTION: Record<number, number> = {
   8: 81,
 }
 
-// mock 里记录本次会话投过的票，刷新即重置
-const MY_VOTES: Record<number, { option_id: number; created_at: string }> = {}
 
 function sleep(ms = 300): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -179,37 +183,17 @@ function toDetail(item: DebateItem): DebateDetail {
 }
 
 // 争议海螺列表：按 contested_at 倒序，固定最多 100 条
-export async function getDebates(): Promise<DebateItem[]> {
+export async function getDebates(): Promise<PageResult<DebateItem>> {
   await sleep()
-  return [...DEBATES]
-    .sort((a, b) => b.contested_at.localeCompare(a.contested_at))
-    .slice(0, 100)
+  const sorted = [...DEBATES].sort((a, b) => b.contested_at.localeCompare(a.contested_at))
+  const page = sorted.slice(0, 100)
+  // total 是总数，returned 是本次实际返回的条数，两者可能不等
+  return { list: page, returned: page.length, total: sorted.length }
 }
-
 // 对应 GET /api/questions/{id}
 export async function getDebateDetail(id: number): Promise<DebateDetail> {
   await sleep()
   const item = DEBATES.find((question) => question.id === id)
   if (!item) throw new Error('问题不存在')
-  return toDetail(item)
-}
-
-// 对应 POST /api/questions/{id}/votes
-export async function voteDebate(id: number, optionId: number): Promise<DebateDetail> {
-  await sleep()
-  const item = DEBATES.find((question) => question.id === id)
-  if (!item) throw new Error('问题不存在')
-  if (MY_VOTES[id]) throw new Error('你已经投过票了')
-
-  const option = item.options.find((current) => current.id === optionId)
-  if (!option) throw new Error('选项不存在')
-
-  option.votes += 1
-  item.total_votes += 1
-  item.options.forEach((current) => {
-    current.percent = Math.round((current.votes / item.total_votes) * 1000) / 10
-  })
-  MY_VOTES[id] = { option_id: optionId, created_at: new Date().toISOString() }
-
   return toDetail(item)
 }
