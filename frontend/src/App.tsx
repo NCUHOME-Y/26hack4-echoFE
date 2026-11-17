@@ -8,6 +8,7 @@ import Profile from './pages/profile'
 import Debate from './pages/debate'
 import DebateDetailPage from './pages/debate/detail'
 import Question from './pages/question'
+import Ask from './pages/ask'
 import Shell from './pages/shell'
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/ask" element={<div style={{ padding: 24 }}>提问（待做）</div>} />
+      <Route path="/ask" element={<Ask />} />
       <Route path="/question" element={<Question />} />
 
       <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
@@ -24,6 +25,8 @@ function App() {
             <Route path="/debate/:id" element={<DebateDetailPage />} />
             <Route path="/shell" element={<Shell />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/ask" element={<Ask />} />
+            <Route path="/question" element={<Question />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
