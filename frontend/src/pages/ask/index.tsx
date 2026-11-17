@@ -14,9 +14,9 @@ import {
   settleLabel,
   loadDraft,
   saveDraft,
-  publishQuestion,
+  clearDraft,
 } from '../../mock/ask'
-
+import { publishQuestion } from '../../api/question'
 const LETTERS = ['A', 'B', 'C', 'D']
 
 export default function Ask() {
@@ -78,6 +78,7 @@ export default function Ask() {
     setError('')
     try {
       await publishQuestion({ question, options, settleHours })
+      clearDraft()
       setPublished(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : '发布失败，再试一次')
