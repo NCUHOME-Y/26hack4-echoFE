@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Outlet,Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Login/Register'
 import Home from './pages/home'
@@ -18,10 +18,12 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/ask" element={<Ask />} />
-      <Route path="/question" element={<Question />} />
-      <Route path="/settle/:id" element={<End />} />
-      <Route path="/answer-end/:id" element={<AnswerEnd />} />
+      <Route element={<RequireAuth><Outlet /></RequireAuth>}>
+        <Route path="/ask" element={<Ask />} />
+        <Route path="/question" element={<Question />} />
+        <Route path="/settle/:id" element={<End />} />
+        <Route path="/answer-end/:id" element={<AnswerEnd />} />
+      </Route>
 
       <Route element={<RequireAuth><BasicLayout /></RequireAuth>}>
             <Route path="/home" element={<Home />} />
