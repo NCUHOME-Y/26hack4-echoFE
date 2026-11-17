@@ -1,4 +1,4 @@
-import { post } from './request'
+import {del,get,post } from './request'
 
 export interface QuestionOption {
   id: number
@@ -53,4 +53,72 @@ export function publishQuestion(
     options: labels.map((label) => ({ label })),
     duration_hours: draft.settleHours,
   })
+}
+
+export function getRandomQuestion(): Promise<QuestionDetail | null> {
+  return get<QuestionDetail | null>('/questions/random')
+}
+
+export interface VoteResult {
+  question_id: number
+  option_id: number
+  total_votes: number
+  options: QuestionOption[]
+}
+
+export function submitVote(
+  questionId: number,
+  optionId: number,
+): Promise<VoteResult> {
+  return post<VoteResult>(`/questions/${questionId}/votes`, {
+    option_id: optionId,
+  })
+}
+
+export const COMMENT_MAX_LEN = 32
+
+export interface CommentView {
+  id: number
+  content: string
+  created_at: string
+  is_mine: boolean
+  author: QuestionAsker
+}
+
+interface CommentListResult {
+  list: CommentView[]
+  returned: number
+  total: number
+}
+
+interface DeleteCommentResult {
+  id: number
+  deleted: boolean
+}
+
+export async function getComments(
+  questionId: number,
+): Promise<CommentView[]> {
+  const data = await get<CommentListResult>(
+    `/questions/${questionId}/replies`,
+  )
+  return data.list
+}
+
+export async function addComment(
+  questionId: number,
+  content: string,
+): Promise<CommentView[]> {
+  await post<CommentView>(`/questions/${questionId}/replies`, {
+    content: content.trim(),
+  })
+  return getComments(questionId)
+}
+
+export async function deleteComment(
+  questionId: number,
+  commentId: number,
+): Promise<CommentView[]> {
+  await del<DeleteCommentResult>(`/replies/${commentId}`)
+  return getComments(questionId)
 }

@@ -3,31 +3,37 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './index.module.css'
 import decoPair from '../../assets/brand/deco2.png'
+import { EXP_PER_LEVEL, getMe } from '../../api/me'
+import type { MeProfile } from '../../api/me'
 import {
-  EXP_PER_LEVEL,
   COMMENT_MAX_LEN,
-  getMe,
-  levelInfo,
-  getQuestion,
+  getRandomQuestion,
   submitVote,
-  recycleLabel,
   getComments,
   addComment,
   deleteComment,
-} from '../../mock/question'
-import type { AnswerQuestion, CommentView } from '../../mock/question'
+} from '../../api/question'
+import type {
+  QuestionDetail,
+  CommentView,
+} from '../../api/question'
+import { recycleLabel } from '../../mock/question'
+import { avatarUrl } from '../../assets/avatars'
 
 const LETTERS = ['A', 'B', 'C', 'D']
+const MAX_LEVEL = 9999
 
 export default function Answer() {
   const navigate = useNavigate()
-  const me = getMe()
 
-  const [question, setQuestion] = useState<AnswerQuestion | null>(null)
+  const [me, setMe] = useState<MeProfile | null>(null)
+  const [question, setQuestion] = useState<QuestionDetail | null>(null)
   const [selected, setSelected] = useState<number | null>(null)
   const [voted, setVoted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [empty, setEmpty] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   const [comments, setComments] = useState<CommentView[]>([])
   const [draft, setDraft] = useState('')
@@ -35,14 +41,20 @@ export default function Answer() {
   const [confirmId, setConfirmId] = useState<number | null>(null)
   const pressTimer = useRef<number | null>(null)
 
-  function loadQuestion() {
-    getQuestion().then((q) => {
+function loadQuestion() {
+  Promise.all([getRandomQuestion(), getMe()])
+    .then(([q, profile]) => {
+      setMe(profile)
+      setLoadError('')
+
       if (!q) {
         setQuestion(null)
         setEmpty(true)
         return
       }
+
       setQuestion(q)
+      setEmpty(false)
       setSelected(null)
       setVoted(false)
       setComments([])
@@ -50,7 +62,14 @@ export default function Answer() {
       setCommentError('')
       setConfirmId(null)
     })
-  }
+    .catch((err) => {
+      setQuestion(null)
+      setLoadError(err instanceof Error ? err.message : '题目加载失败')
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+}
 
   useEffect(() => {
     loadQuestion()
@@ -58,30 +77,67 @@ export default function Answer() {
 
   useEffect(() => {
     if (!voted || !question) return
-    getComments(question.id).then(setComments)
+    getComments(question.id)
+      .then(setComments)
+      .catch((err) => {
+        setCommentError(
+          err instanceof Error ? err.message : '评论加载失败',
+        )
+    })  
   }, [voted, question])
 
-  const exp = question ? question.exp : me.exp
-  const { level, progress } = levelInfo(exp)
-  const totalVotes = question
-    ? question.options.reduce((sum, o) => sum + o.votes, 0)
-    : 0
+  const level = me?.level ?? 0
+  const progress = me?.level_progress ?? 0
 
   async function handleVote() {
-    if (selected === null || submitting) return
+    if (!question || selected === null || submitting) return
+
     setSubmitting(true)
+    setLoadError('')
+
     try {
-      const updated = await submitVote(selected)
-      setQuestion(updated)
+      const updated = await submitVote(question.id, selected)
+
+      setQuestion({
+        ...question,
+        options: updated.options,
+        total_votes: updated.total_votes,
+      })
       setVoted(true)
+
+      // 投票成功固定增加 5 经验，本地更新当前页面的经验快照
+      setMe((current) => {
+        if (!current) return current
+
+        const exp = current.exp + 5
+        const nextLevel = Math.min(
+          Math.floor(exp / EXP_PER_LEVEL),
+          MAX_LEVEL,
+        )
+
+        return {
+          ...current,
+          exp,
+          level: nextLevel,
+          level_progress:
+            nextLevel === MAX_LEVEL ? 0 : exp % EXP_PER_LEVEL,
+        }
+      })
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : '投票失败')
     } finally {
       setSubmitting(false)
     }
   }
 
-  // 下一只：新的随机题
   function handleNext() {
     if (submitting) return
+
+    setLoading(true)
+    setLoadError('')
+    setEmpty(false)
+    setQuestion(null)
+    setVoted(false)
     loadQuestion()
   }
 
@@ -150,6 +206,8 @@ export default function Answer() {
       </header>
 
       <div className={styles.board}>
+        {loading && <p className={styles.emptyText}>正在捡海螺…</p>}
+        {loadError && <p className={styles.emptyText}>{loadError}</p>}
         {question && (
           <>
             <div className={styles.expWrap}>
@@ -166,7 +224,7 @@ export default function Answer() {
             </div>
 
             <section className={styles.card}>
-              <p className={styles.question}>{question.title}</p>
+              <p className={styles.question}>{question.description}</p>
               <div className={styles.metaRow}>
                 <span className={styles.badge}>{voted ? '已投票' : '投票中'}</span>
               </div>
@@ -174,7 +232,6 @@ export default function Answer() {
 
             <div className={styles.options}>
               {question.options.map((o, index) => {
-                const pct = totalVotes ? Math.round((o.votes / totalVotes) * 100) : 0
                 const isMine = selected === o.id
                 const className = [
                   styles.option,
@@ -183,6 +240,7 @@ export default function Answer() {
                 ]
                   .filter(Boolean)
                   .join(' ')
+
                 return (
                   <button
                     key={o.id}
@@ -192,12 +250,12 @@ export default function Answer() {
                     onClick={() => setSelected(isMine ? null : o.id)}
                   >
                     <span className={styles.letter}>{LETTERS[index]}</span>
-                    <span className={styles.optionLabel}>{o.text}</span>
-                    {voted && <span className={styles.percent}>{pct}%</span>}
+                    <span className={styles.optionLabel}>{o.label}</span>
+                    {voted && <span className={styles.percent}>{o.percent}%</span>}
                   </button>
                 )
               })}
-            </div>
+              </div>
 
             {!voted && (
               <p className={styles.expireRow}>
@@ -231,20 +289,26 @@ export default function Answer() {
                         key={c.id}
                         className={styles.comment}
                         onPointerDown={() => {
-                          if (c.mine || question.is_author) startPress(c.id)
+                          if (c.is_mine || question.asker.id === me?.id) startPress(c.id)
                         }}
                         onPointerUp={cancelPress}
                         onPointerLeave={cancelPress}
                         onPointerCancel={cancelPress}
                       >
                         {/* 匿名 */}
-                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+                        <img
+                          className={styles.commentAvatar}
+                          src={avatarUrl(c.author.avatar)}
+                          alt=""
+                        />
 
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
                             <span className={styles.commentName}>匿名海螺</span>
                             {/* 审核 */}
-                            <span className={styles.commentLevel}>lv{c.level}</span>
+                            <span className={styles.commentLevel}>
+                              lv{c.author.level}
+                            </span>
                           </div>
                           <p className={styles.commentText}>{c.content}</p>
                         </div>
@@ -282,7 +346,7 @@ export default function Answer() {
       </div>
 
       {/* 投票按钮 */}
-      {!empty && !voted && (
+      {question&&!empty && !voted && (
         <footer className={styles.sandEdge}>
           <button
             type="button"
