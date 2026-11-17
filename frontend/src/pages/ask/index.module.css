@@ -1,0 +1,368 @@
+@font-face {
+  font-family: 'alimama';
+  src: url('../../assets/font/alimama.ttf') format('truetype');
+  font-display: swap;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding-bottom: 0;
+  overflow-x: hidden;
+  background: linear-gradient(to bottom, #abe5eb 0 30%, #f4fdff 30% 100%);
+  font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 16px 12px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 26px;
+  line-height: 1;
+  color: #111111;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  color: #111111;
+}
+
+/* 头部下面的装饰虚线 */
+.dashLine {
+  height: 0;
+  margin: 0 16px;
+  border-top: 2px dashed rgba(23, 128, 148, 0.55);
+}
+
+.body {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 16px 8px;
+}
+
+.draftTip {
+  margin: 0;
+  font-size: 12px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
+  color: #3d9db3;
+}
+
+/* 问题卡 */
+.qCard {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.qInput {
+  display: block;
+  width: 100%;
+  min-height: 96px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #1f2b2e;
+  background: transparent;
+  border: 1px dashed #dcdcdc;
+  border-radius: 12px;
+  box-sizing: border-box;
+  resize: none;
+  outline: none;
+}
+
+.qInput::placeholder {
+  color: #b9bcbd;
+}
+
+.qInput:focus {
+  border-color: #8fcbd8;
+}
+
+.qFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.counter {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: #b0b4b5;
+}
+
+.counterOver {
+  color: #822828;
+  font-weight: 700;
+}
+
+/* 超字数提示 */
+.lenWarn {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  color: #822828;
+}
+
+/* 选项 */
+.optPanel {
+  padding: 12px;
+  background: #f5f2d5;
+  border-radius: 18px;
+}
+
+.optTitle {
+  margin: 0 0 8px 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #33616b;
+}
+
+.optList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.optRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 12px 0 8px;
+  background: #f1f0ee;
+  border-radius: 12px;
+}
+
+.optLetter {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #33616b;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.optInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  color: #1f2b2e;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+.optInput::placeholder {
+  color: #ced0d0;
+}
+
+.optRemove {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 1;
+  color: #8a9a9e;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.optFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding-left: 4px;
+}
+
+.addOpt {
+  flex: 0 0 auto;
+  height: 30px;
+  margin-left: auto;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #3d9db3;
+  background: #ffffff;
+  border: 1px solid #cfe4e9;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* 结算倒计时 */
+.settleWrap {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.settleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 46px;
+  padding: 0 16px;
+  background: #ffffff;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+}
+
+.settleIcon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.settleLabel {
+  font-size: 12px;
+  color: #8a9a9e;
+}
+
+.settleValue {
+  font-size: 13px;
+  font-weight: 650;
+  color: #33616b;
+}
+
+/* 点开后的六个小时数 */
+.timePicker {
+  position: absolute;
+  right: 0;
+  bottom: 56px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+.timeChip {
+  height: 34px;
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #33616b;
+  background: #f1f8fa;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.timeChipActive {
+  color: #ffffff;
+  background: #3d9db3;
+}
+
+/* 丢出海螺 */
+.foot {
+  flex: 0 0 auto;
+  padding: 8px 16px 20px;
+}
+
+.error {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #822828;
+  text-align: center;
+}
+
+.submit {
+  width: 100%;
+  height: 64px;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2b2e;
+  background: #d9d3a9;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 发布成功 */
+.modalMask {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.modalBox {
+  width: 76%;
+  max-width: 290px;
+  padding: 22px 20px 16px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1f2b2e;
+}
+
+.modalBtn {
+  width: 100%;
+  height: 44px;
+  margin-top: 18px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  color: #ffffff;
+  background: #3d9db3;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}

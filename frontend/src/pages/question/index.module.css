@@ -9,7 +9,7 @@
   flex-direction: column;
   min-height: 100%;
   overflow-x: hidden;
-  background: #abe5eb;
+  background: linear-gradient(to bottom, #abe5eb 0 30%, #f2fdff 30% 100%);
   font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
     'Microsoft YaHei', sans-serif;
 }
