@@ -1,8 +1,8 @@
 // 争议海螺：最新在上的问题列表
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getDebates } from '../../mock/debate'
-import type { DebateItem } from '../../mock/debate'
+import { getDebates } from '../../api/debate'
+import type { DebateItem } from '../../api/debate'
 import styles from './index.module.css'
 import decoPair from '../../assets/brand/deco2.png'
 
