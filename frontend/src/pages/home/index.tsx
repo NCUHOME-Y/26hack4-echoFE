@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styles from './index.module.css'
-import { getHomeData } from '../../mock/home'
-import type { HomeData } from '../../mock/home'
+import { getHomeData } from '../../api/home'
+import type { HomeData } from '../../api/home'
 
 import arrowIcon from '../../assets/home/Vector.png'
 import sweepBg from '../../assets/home/bkg.png'
@@ -28,20 +28,30 @@ function formatDate(d: Date) {
 
 export default function Home() {
   const [data, setData] = useState<HomeData | null>(null)
+  const [error, setError] = useState('')
   const location = useLocation()
   const navigate = useNavigate()
   const [now] = useState(() => new Date())
 
   useEffect(() => {
     let alive = true
-    getHomeData().then((d) => {
-      if (alive) setData(d)
-    })
+    
+    getHomeData()
+      .then((d) => {
+        if (!alive) return
+        setData(d)
+        setError('')
+      })
+      .catch((err) => {
+        if (alive) {
+          setError(err instanceof Error ? err.message : '首页加载失败')
+        }
+      })
+    
     return () => {
       alive = false
     }
   }, [location.key])
-
   return (
     <div className={styles.page}>
       <header>
@@ -80,16 +90,22 @@ export default function Home() {
           </h2>
 
           <div className={styles.scroller}>
-            {!data && <p className={styles.loading}>加载中…</p>}
+            {!data && !error && <p className={styles.loading}>加载中…</p>}
+            {error && <p className={styles.loading}>{error}</p>}
+            {data && data.disputes.length === 0 && (
+              <p className={styles.loading}>暂时还没有争议海螺</p>
+            )}
             {data?.disputes.map((item) => (
               <article
                 key={item.id}
                 className={styles.disputeCard}
                 onClick={() => navigate('/debate')}
               >
-                <h3 className={styles.disputeTitle}>{item.title}</h3>
+                <h3 className={styles.disputeTitle}>{item.description}</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
-                <p className={styles.disputeText}>{item.summary}</p>
+                <p className={styles.disputeText}>
+                  {item.options.map((option) => option.label).join(' / ')}
+                </p>
                 <div className={styles.waitingText}>
                   <img className={styles.disputeArrow} src={arrow} alt="" aria-hidden="true" />
                   <p className={styles.disputeMore}>等待你的关键一票</p>
@@ -108,17 +124,23 @@ export default function Home() {
         <div className={styles.stats}>
           <div className={styles.stat}>
             <p className={styles.statLabel}>投出了</p>
-            <p className={styles.statValue}>{data ? data.stats.thrown : '—'}</p>
+            <p className={styles.statValue}>
+              {data ? data.stats.questions_today : '—'}
+            </p>
             <p className={styles.statUnit}>只海螺</p>
           </div>
           <div className={styles.stat}>
             <p className={styles.statLabel}>收回了</p>
-            <p className={styles.statValue}>{data ? data.stats.returned : '—'}</p>
+            <p className={styles.statValue}>
+              {data ? data.stats.settled_today : '—'}
+            </p>
             <p className={styles.statUnit}>只海螺</p>
           </div>
           <div className={styles.stat}>
             <p className={styles.statLabel}>拾起了</p>
-            <p className={styles.statValue}>{data ? data.stats.picked : '—'}</p>
+            <p className={styles.statValue}>
+              {data ? data.stats.votes_today : '—'}
+            </p>
             <p className={styles.statUnit}>只海螺</p>
           </div>
         </div>
