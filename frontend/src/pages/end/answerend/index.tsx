@@ -3,16 +3,18 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './index.module.css'
 import decoPair from '../../../assets/brand/deco2.png'
-import { getAnswerEndQuestion } from '../../../mock/answerEnd'
-import type { AnswerEndQuestion } from '../../../mock/answerEnd'
 import {
   COMMENT_MAX_LEN,
+  getQuestionDetail,
+  getComments,
   addComment,
   deleteComment,
-  getComments,
-} from '../../../mock/question'
-import type { CommentView } from '../../../mock/question'
-import { awardMatchPoints, getPoints } from '../../../mock/points'
+} from '../../../api/question'
+import type {
+  QuestionDetail,
+  CommentView,
+} from '../../../api/question'
+import { avatarUrl } from '../../../assets/avatars'
 
 const LETTERS = ['A', 'B', 'C', 'D']
 
@@ -35,7 +37,7 @@ export default function AnswerEnd() {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const [question, setQuestion] = useState<AnswerEndQuestion | null>(null)
+  const [question, setQuestion] = useState<QuestionDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -45,48 +47,53 @@ export default function AnswerEnd() {
   const [confirmId, setConfirmId] = useState<number | null>(null)
   const pressTimer = useRef<number | null>(null)
 
-  // 猜中加分：+N 分（每条海螺只加一次）
-  const [gain, setGain] = useState(0)
+  
+
+  const qid = Number(id)
+  const invalidId = !Number.isInteger(qid) || qid <= 0
 
   useEffect(() => {
-    const qid = Number(id)
-    if (!Number.isFinite(qid) || qid <= 0) {
-      setError('这只海螺找不到')
-      setLoading(false)
-      return
-    }
+    if (invalidId) return
+
     let cancelled = false
-    getAnswerEndQuestion(qid)
+
+    getQuestionDetail(qid)
       .then((data) => {
         if (cancelled) return
-        if (!data) {
-          setError('这只海螺已经不在海里了')
-          return
-        }
+        setError('')
         setQuestion(data)
-        // 已公布 + 我选的正好是发布者公布的那一项 → 加分（同一条海螺不重复加）
-        const gained = awardMatchPoints(
-          data.id,
-          data.settled_at != null &&
-            data.final_option_id !== null &&
-            data.final_option_id === data.my_option_id,
-        )
-        if (gained > 0) setGain(gained)
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : '海螺打捞失败')
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : '海螺打捞失败')
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
       })
+
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [qid, invalidId])
 
   const settled = question?.settled_at != null
   const total = question?.total_votes ?? 0
-  const expired = question ? new Date(question.expires_at).getTime() < Date.now() : false
+  const expired = question
+    ? question.status === 'closed' && !settled
+    : false
+
+  // 积分由后端在结算时发放，前端只展示是否猜中
+  const gain =
+    question &&
+    settled &&
+    question.final_option_id !== null &&
+    question.my_vote?.option_id === question.final_option_id
+      ? 25
+      : 0
+
+  const displayLoading = invalidId ? false : loading
+  const displayError = invalidId ? '这只海螺找不到' : error
 
   useEffect(() => {
     if (!question) return
@@ -99,11 +106,7 @@ export default function AnswerEnd() {
     }
   }, [question])
 
-  function percent(votes: number): number {
-    if (!total) return 0
-    return Math.round((votes / total) * 100)
-  }
-
+ 
   async function handleSend() {
     if (!question) return
     const text = draft.trim()
@@ -159,10 +162,14 @@ export default function AnswerEnd() {
       </header>
 
       <div className={styles.board}>
-        {loading && <p className={styles.hint}>正在打捞这只海螺…</p>}
-        {!loading && error && <p className={styles.hint}>{error}</p>}
-
-        {!loading && !error && question && (
+        {displayLoading && (
+          <p className={styles.hint}>正在打捞这只海螺…</p>
+        )}
+        {!displayLoading && displayError && (
+          <p className={styles.hint}>{displayError}</p>
+        )}
+        
+        {!displayLoading && !displayError && question && (
           <>
             <section className={styles.card}>
               <p className={styles.question}>{question.description}</p>
@@ -175,8 +182,7 @@ export default function AnswerEnd() {
             {/* 各选项占比 */}
             <div className={styles.options}>
               {question.options.map((opt, index) => {
-                const pct = percent(opt.votes)
-                const isMine = opt.id === question.my_option_id
+                const isMine = opt.id === question.my_vote?.option_id
                 const isFinal = question.final_option_id === opt.id
                 const className = [
                   styles.option,
@@ -185,16 +191,17 @@ export default function AnswerEnd() {
                 ]
                   .filter(Boolean)
                   .join(' ')
+
                 return (
                   <div key={opt.id} className={className}>
                     <span className={styles.letter}>{LETTERS[index]}</span>
                     <span className={styles.optionLabel}>
-                      {opt.text}
+                      {opt.label}
                       {isMine && <em className={styles.tagMine}>我的选择</em>}
                       {isFinal && <em className={styles.tagFinal}>最终选择</em>}
                     </span>
                     <span className={styles.votes}>{opt.votes} 人</span>
-                    <span className={styles.percent}>{pct}%</span>
+                    <span className={styles.percent}>{opt.percent}%</span>
                   </div>
                 )
               })}
@@ -210,12 +217,12 @@ export default function AnswerEnd() {
                     : `海螺将在${expireLabel(question.expires_at).replaceAll(' ', '')}被收回。`
                   : question.final_option_id === null
                     ? '这只海螺已经沉入深海啦~'
-                    : (question.options.find((o) => o.id === question.final_option_id)?.text ??
+                    : (question.options.find((o) => o.id === question.final_option_id)?.label ??
                       '没有公布')}
               </p>
               {gain > 0 && (
                 <p className={styles.gain}>
-                  猜中发布者的选择，积分 +{gain}（当前 {getPoints()}）
+                  猜中发布者的选择，获得25积分
                 </p>
               )}
             </section>
@@ -235,16 +242,22 @@ export default function AnswerEnd() {
                       <li
                         key={c.id}
                         className={styles.comment}
-                        onPointerDown={() => startPress(c.mine, c.id)}
+                        onPointerDown={() => startPress(c.is_mine, c.id)}
                         onPointerUp={cancelPress}
                         onPointerLeave={cancelPress}
                         onPointerCancel={cancelPress}
                       >
-                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+                        <img
+                          className={styles.commentAvatar}
+                          src={avatarUrl(c.author.avatar)}
+                          alt=""
+                        />
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
                             <span className={styles.commentName}>匿名海螺</span>
-                            <span className={styles.commentLevel}>lv{c.level}</span>
+                            <span className={styles.commentLevel}>
+                              lv{c.author.level}
+                            </span>
                           </div>
                           <p className={styles.commentText}>{c.content}</p>
                         </div>
