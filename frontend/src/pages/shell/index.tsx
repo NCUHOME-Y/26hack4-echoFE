@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getMyQuestions } from '../../mock/myQuestions'
-import type { MyQuestion } from '../../mock/myQuestions'
+import { getMyQuestions } from '../../api/me'
+import type { MyQuestion } from '../../api/me'
 import styles from './index.module.css'
 import decoPair from '../../assets/brand/deco2.png'
 

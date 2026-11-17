@@ -9,8 +9,8 @@ import {
   getMyParticipations,
   participationStatus,
   updateAvatar,
-} from '../../mock/profile'
-import type { MeProfile, AnswerItem } from '../../mock/profile'
+} from '../../api/me'
+import type { MeProfile, AnswerItem } from '../../api/me'
 import styles from './index.module.css'
 import logoImg from '../../assets/brand/logo-trim.png'
 import decoPair from '../../assets/brand/deco2.png'
