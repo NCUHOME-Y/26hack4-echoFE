@@ -1,8 +1,15 @@
+@font-face {
+  font-family: 'alimama';
+  src: url('../../assets/font/alimama.ttf') format('truetype');
+  font-display: swap;
+}
+
 .page {
   display: flex;
   flex-direction: column;
   min-height: 100%;
   padding: 40px 24px;
+  background: linear-gradient(to bottom, #d7f3f5 0 45%, #ffffff 45% 100%);
 }
 
 /* slogon */
@@ -13,13 +20,14 @@
   max-width: 100%;
   margin-top: 10%;
   padding: 8px 16px 32px;   
-  background: #ececec;
+  background: #d7f3f5;
 }
 
 
 .title {
   margin: 0;
   font-size: 28px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 800;
   line-height: 1.35;
   letter-spacing: 0.01em;
@@ -35,6 +43,14 @@
   min-height: 32px;
 } 
 
+.clip{
+  position: absolute;
+  z-index: 1;           
+  top: 335px;            
+  width: 25px;
+  pointer-events: none;
+}
+
 /* 登录注册 */
 .card {
   flex: 0 0 auto;
@@ -42,9 +58,9 @@
   flex-direction: column;
   gap: 18px;
   padding: 20px;
-  min-height: 500px;
+  min-height: 490px;
   border-radius: 20px;
-  background: #f4f4f4;
+  background: #abe3eb;
   box-shadow:
     0 1px 2px rgba(17, 17, 17, 0.04),
     0 8px 24px rgba(17, 17, 17, 0.08);
@@ -55,7 +71,7 @@
   gap: 8px;
   padding: 4px;
   border-radius: 999px;
-  background: #fff;
+  background: #e7e7e7;
 }
 
 .segBtn {
@@ -65,15 +81,16 @@
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #111;
-  font-size: 16px;
+  color: #33616b;
+  font-size: 18px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease;
 }
 
 .segBtnActive {
-  background: #111;
+  background: #3d9db3;
   color: #fff;
 }
 
@@ -96,9 +113,10 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: 14px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 700;
-  color: #111;
+  color: #33616b;
 }
 
 .input {
@@ -152,9 +170,10 @@
   margin-top: 4px;
   border: 0;
   border-radius: 10px;
-  background: #111;
+  background: #72a1ed;
   color: #fff;
   font-size: 16px;
+  font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
@@ -163,7 +182,7 @@
 
 /* 没填完是灰的，能点 */
 .submitIdle {
-  background: #bdbdbd;
+  background: #72a1ed;
 }
 
 .submit:active {
