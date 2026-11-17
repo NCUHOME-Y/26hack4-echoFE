@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './Login.module.css'
-import { login, setToken } from '../../mock/auth'
+import { login, setToken } from '../../api/auth'
 import logo from '../../assets/brand/logo-trim.png'
 import clip from '../../assets/brand/decoxie.png'
 
