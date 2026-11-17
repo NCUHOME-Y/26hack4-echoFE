@@ -1,23 +1,26 @@
 import {useEffect,useRef,useState} from 'react'
 import {useNavigate,useParams} from 'react-router-dom'
-import {getDebateDetail} from '../../../mock/debate'
-import type {DebateDetail} from '../../../mock/debate'
 import {
   COMMENT_MAX_LEN,
   addComment,
   deleteComment,
   getComments,
-} from '../../../mock/question'
-import type {CommentView} from '../../../mock/question'
+  getQuestionDetail,
+} from '../../../api/question'
+import type {
+  CommentView,
+  QuestionDetail,
+} from '../../../api/question'
 import styles from './index.module.css'
 import decoPair from '../../../assets/brand/deco2.png'
+import { avatarUrl } from '../../../assets/avatars'
 
 const LETTERS =['A','B','C','D']
 
 export default function DebateDetail(){
   const { id } = useParams()
   const navigate = useNavigate()
-  const [detail, setDetail] = useState<DebateDetail | null>(null)
+  const [detail, setDetail] = useState<QuestionDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   // 我猜的选项；null 表示还没猜，猜完就锁定
@@ -30,30 +33,40 @@ export default function DebateDetail(){
   const [confirmId, setConfirmId] = useState<number | null>(null)
   const pressTimer = useRef<number | null>(null)
 
+  const qid = Number(id)
+  const invalidId = !Number.isInteger(qid) || qid <= 0
   useEffect(() => {
+    if (invalidId) return
+
     let cancelled = false
-    setLoading(true)
-    setError('')
-    setDetail(null)   //题先清旧题 避免旧内容闪一下
-    setGuessed(null)  //重置竞猜 否则新题一进来就显示答案
-    setComments([])
-    setDraft('')
-    setCommentError('')
-    setConfirmId(null)
-    getDebateDetail(Number(id))
+
+    getQuestionDetail(qid)
       .then((data) => {
-        if (!cancelled) setDetail(data)
+        if (cancelled) return
+        setDetail(data)
+        setGuessed(null)
+        setComments([])
+        setDraft('')
+        setCommentError('')
+        setConfirmId(null)
+        setError('')
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : '详情加载失败')
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : '详情加载失败')
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
       })
+
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [qid, invalidId])
+
+  const displayLoading = invalidId ? false : loading
+  const displayError = invalidId ? '这只海螺找不到' : error
 
   const revealed = guessed !== null
   const finalIndex = detail
@@ -65,10 +78,21 @@ export default function DebateDetail(){
   // 猜完才拉评论区，进评论区取一次快照
   useEffect(() => {
     if (!revealed || !detail) return
+    
     let cancelled = false
-    getComments(detail.id).then((list) => {
-      if (!cancelled) setComments(list)
-    })
+    
+    getComments(detail.id)
+      .then((list) => {
+        if (!cancelled) setComments(list)
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setCommentError(
+            err instanceof Error ? err.message : '评论加载失败',
+          )
+        }
+      })
+    
     return () => {
       cancelled = true
     }
@@ -125,10 +149,12 @@ export default function DebateDetail(){
       </header>
 
       <div className={styles.board}>
-        {loading && <p className={styles.status}>正在打捞…</p>}
-        {error && <p className={styles.error}>{error}</p>}
-
-        {detail && !loading && (
+        {displayLoading && <p className={styles.status}>正在打捞…</p>}
+        {!displayLoading && displayError && (
+          <p className={styles.error}>{displayError}</p>
+        )}
+        
+        {detail && !displayLoading && !displayError && (
           <>
             <section className={styles.card}>
               <p className={styles.question}>{detail.description}</p>
@@ -197,18 +223,22 @@ export default function DebateDetail(){
                         key={c.id}
                         className={styles.comment}
                         onPointerDown={() => {
-                          if (c.mine) startPress(c.id)
+                          if (c.is_mine === true) startPress(c.id)
                         }}
                         onPointerUp={cancelPress}
                         onPointerLeave={cancelPress}
                         onPointerCancel={cancelPress}
                       >
-                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+                        <img
+                          className={styles.commentAvatar}
+                          src={avatarUrl(c.author.avatar)}
+                          alt=""
+                        />
 
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
-                            <span className={styles.commentName}>匿名海螺</span>
-                            <span className={styles.commentLevel}>lv{c.level}</span>
+                            <span className={styles.commentName}>{c.author.nickname}</span>
+                            <span className={styles.commentLevel}>lv{c.author.level}</span>
                           </div>
                           <p className={styles.commentText}>{c.content}</p>
                         </div>
