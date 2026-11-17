@@ -45,7 +45,7 @@
   overscroll-behavior: contain;
   padding: 16px 22px;
   background: #f5f2d5;
-
+  scrollbar-width: none;
 }
 
 .list {
@@ -72,15 +72,16 @@
 
 .cardText {
   display: -webkit-box;
-
-  margin: 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
+  overflow-wrap: anywhere;
+  margin: 0;
   font-size: 16px;
   line-height: 1.4;
   color: #33616b;
   font-weight: 650;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .cardFoot {
@@ -135,7 +136,7 @@
 /* 底部固定沙色条：不在滚动区内，顶端白色虚线 */
 .sandEdge {
   flex: 0 0 auto;
-  height: 30px;
+  height: 25px;
   background: #f5f2d5;
-  border-top: 2px dashed #ffffff;
+  border-top:  dashed #ffffff;
 }

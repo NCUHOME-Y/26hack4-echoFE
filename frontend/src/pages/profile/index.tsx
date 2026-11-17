@@ -7,16 +7,17 @@ import {
   PARTICIPATION_STATUS_TEXT,
   getMe,
   getMyParticipations,
+  participationStatus,
   updateAvatar,
 } from '../../mock/profile'
-import type { MeProfile, ParticipationItem } from '../../mock/profile'
+import type { MeProfile, AnswerItem } from '../../mock/profile'
 import styles from './index.module.css'
 import logoImg from '../../assets/brand/logo-trim.png'
-import decoQuote from '../../assets/brand/deco1.png'
+import decoPair from '../../assets/brand/deco2.png'
 
 export default function Profile() {
   const [me, setMe] = useState<MeProfile | null>(null)
-  const [items, setItems] = useState<ParticipationItem[]>([])
+  const [items, setItems] = useState<AnswerItem[]>([])
   const [keyword, setKeyword] = useState('')
   const [error, setError] = useState('')
   const [listLoading, setListLoading] = useState(true)
@@ -67,18 +68,7 @@ export default function Profile() {
       </header>
 
       <section className={styles.card}>
-        <img
-          className={`${styles.decoCorner} ${styles.decoCornerLeft}`}
-          src={decoQuote}
-          alt=""
-          aria-hidden="true"
-        />
-        <img
-          className={`${styles.decoCorner} ${styles.decoCornerRight}`}
-          src={decoQuote}
-          alt=""
-          aria-hidden="true"
-        />
+        <img className={styles.decoPair} src={decoPair} alt="" aria-hidden="true" />
         <button
           type="button"
           className={styles.avatarButton}
@@ -90,18 +80,18 @@ export default function Profile() {
 
         <div className={styles.meta}>
           <p className={styles.nickname}>{me?.nickname ?? '…'}</p>
-          <p className={styles.level}>等级：{me?.level ?? 0}</p>
+          <p className={styles.account}>@{me?.account ?? '—'}</p>
+          
           <div className={styles.progress}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
-          <p className={styles.progressText}>
-            {me ? `${me.level_progress}/${EXP_PER_LEVEL}` : `0/${EXP_PER_LEVEL}`}
+          <p className={styles.level}>
+            {me ? `lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}` : 'lv— —/50'}
           </p>
         </div>
       </section>
 
       <div className={styles.searchWrap}>
-        {/*<img className={styles.decoQuote} src={decoQuote} alt="" aria-hidden="true" />*/}
         <input
           className={styles.search}
           type="search"
@@ -112,6 +102,7 @@ export default function Profile() {
           enterKeyHint="search"
         />
       </div>
+      <div className={styles.sandTop} aria-hidden="true" />
 
       <AvatarPicker
         open={pickerOpen}
@@ -131,17 +122,21 @@ export default function Profile() {
           <p className={styles.empty}>没有找到相关的海螺</p>
         ) : (
           <ul className={styles.list}>
-            {items.map((item) => (
-              <li key={item.id} className={styles.item}>
-                <span className={styles.itemText}>{item.description}</span>
-                <span className={`${styles.badge} ${styles[item.status]}`}>
-                  {PARTICIPATION_STATUS_TEXT[item.status]}
-                </span>
-              </li>
-            ))}
+  {items.map((item) => {
+    const status = participationStatus(item)
+    return (
+      <li key={item.question_id} className={styles.item}>
+        <span className={styles.itemText}>{item.description}</span>
+        <span className={`${styles.badge} ${styles[status]}`}>
+          {PARTICIPATION_STATUS_TEXT[status]}
+        </span>
+      </li>
+    )
+  })}
           </ul>
         )}
       </section>
+      <div className={styles.sandBottom} aria-hidden="true" />
     </div>
   )
 }

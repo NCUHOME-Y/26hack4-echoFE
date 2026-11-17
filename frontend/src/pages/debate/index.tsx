@@ -15,8 +15,8 @@ export default function Debate() {
   useEffect(() => {
     let cancelled = false
     getDebates()
-      .then((list) => {
-        if (!cancelled) setItems(list)
+      .then((data) => {
+        if (!cancelled) setItems(data.list)
       })
       .catch((err) => {
         if (!cancelled) setError(err instanceof Error ? err.message : '列表加载失败')

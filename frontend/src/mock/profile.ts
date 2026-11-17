@@ -4,7 +4,7 @@ import { AVATAR_IDS } from '../assets/avatars'
 import { getCurrentUser, saveCurrentUser } from './auth'
 
 export const EXP_PER_LEVEL = 50
-export const MAX_EXP = 9999
+export const MAX_EXP = 9999*50
 
 // 与后端 model.User 的返回字段同名，切换真接口时只换实现
 export interface MeProfile {
@@ -19,18 +19,26 @@ export interface MeProfile {
   updated_at: string
 }
 
-// 我参与过的投票：已结算 / 未结算 / 沉入大海（发布者没选）
-export type ParticipationStatus = 'settled' | 'open' | 'lost'
-
-export interface ParticipationItem {
-  id: number
+//对应GET /api/users/me/answers 的列表项
+export interface AnswerItem {
   question_id: number
   description: string
-  status: ParticipationStatus
+  status: 'open' | 'closed'
+  my_option_id: number
   my_option_label: string
-  total_votes: number
-  created_at: string
+  final_option_id: number | null
+  matched: boolean | null
+  voted_at: string
   settled_at: string | null
+}
+
+//展示用的三态是前端推导的 不是后端返回的字段
+export type ParticipationStatus = 'settled' | 'open' | 'lost'
+
+export function participationStatus(item: AnswerItem): ParticipationStatus {
+  if (item.settled_at === null) return 'open'      // 还没结算
+  if (item.final_option_id === null) return 'lost' // 已结算但发布者没选 → 沉入大海
+  return 'settled'
 }
 
 export const PARTICIPATION_STATUS_TEXT: Record<ParticipationStatus, string> = {
@@ -93,23 +101,22 @@ function hoursAgo(hours: number): string {
 }
 
 // 预置的参与记录；真实数据由后端返回，这里只负责让页面先跑起来
-const PARTICIPATIONS: ParticipationItem[] = [
-  { id: 1, question_id: 101, description: '周末去图书馆还是在家赶作业', status: 'settled', my_option_label: '图书馆', total_votes: 36, created_at: hoursAgo(2), settled_at: hoursAgo(1) },
-  { id: 2, question_id: 102, description: '换新手机还是攒钱换电脑', status: 'open', my_option_label: '换电脑', total_votes: 12, created_at: hoursAgo(5), settled_at: null },
-  { id: 3, question_id: 103, description: '我该逃掉重要的专业课去看演唱会吗', status: 'settled', my_option_label: '不逃课', total_votes: 23, created_at: hoursAgo(26), settled_at: hoursAgo(20) },
-  { id: 4, question_id: 104, description: '水杯买粉色还是蓝色', status: 'lost', my_option_label: '粉色', total_votes: 8, created_at: hoursAgo(50), settled_at: null },
-  { id: 5, question_id: 105, description: '要不要为了买衣服省吃俭用一周', status: 'settled', my_option_label: '不要省', total_votes: 41, created_at: hoursAgo(72), settled_at: hoursAgo(60) },
-  { id: 6, question_id: 106, description: '这个手机该不该换', status: 'lost', my_option_label: '该换', total_votes: 0, created_at: hoursAgo(96), settled_at: null },
-  { id: 7, question_id: 107, description: '朋友说的话总伤到我，是我敏感了吗', status: 'settled', my_option_label: '不是敏感', total_votes: 30, created_at: hoursAgo(120), settled_at: hoursAgo(110) },
-  { id: 8, question_id: 108, description: '早上跑步还是晚上跑步', status: 'open', my_option_label: '晚上', total_votes: 6, created_at: hoursAgo(140), settled_at: null },
+const ANSWERS: AnswerItem[] = [
+  { question_id: 101, description: '测试一下打很多字的情况1234567890123456789012345678901234567890周末去图书馆还是在家赶作业', status: 'closed', my_option_id: 1, my_option_label: '图书馆', final_option_id: 1, matched: true, voted_at: hoursAgo(2), settled_at: hoursAgo(1) },
+  { question_id: 102, description: '换新手机还是攒钱换电脑', status: 'open', my_option_id: 2, my_option_label: '换电脑', final_option_id: null, matched: null, voted_at: hoursAgo(5), settled_at: null },
+  { question_id: 103, description: '我该逃掉重要的专业课去看演唱会吗', status: 'closed', my_option_id: 1, my_option_label: '不逃课', final_option_id: 2, matched: false, voted_at: hoursAgo(26), settled_at: hoursAgo(20) },
+  { question_id: 104, description: '水杯买粉色还是蓝色', status: 'closed', my_option_id: 1, my_option_label: '粉色', final_option_id: null, matched: null, voted_at: hoursAgo(50), settled_at: hoursAgo(48) },
+  { question_id: 105, description: '要不要为了买衣服省吃俭用一周', status: 'closed', my_option_id: 2, my_option_label: '不要省', final_option_id: 2, matched: true, voted_at: hoursAgo(72), settled_at: hoursAgo(60) },
+  { question_id: 106, description: '这个手机该不该换', status: 'closed', my_option_id: 1, my_option_label: '该换', final_option_id: null, matched: null, voted_at: hoursAgo(96), settled_at: hoursAgo(90) },
+  { question_id: 107, description: '朋友说的话总伤到我，是我敏感了吗', status: 'closed', my_option_id: 2, my_option_label: '不是敏感', final_option_id: 2, matched: true, voted_at: hoursAgo(120), settled_at: hoursAgo(110) },
+  { question_id: 108, description: '早上跑步还是晚上跑步', status: 'open', my_option_id: 2, my_option_label: '晚上', final_option_id: null, matched: null, voted_at: hoursAgo(140), settled_at: null },
 ]
 
-// 我参与的：关键词过滤 + 越新越上 + 最多 100 条（PRD 规则）
-export async function getMyParticipations(keyword = ''): Promise<ParticipationItem[]> {
+export async function getMyParticipations(keyword = ''): Promise<AnswerItem[]> {
   await sleep()
   const kw = keyword.trim()
-  return PARTICIPATIONS
+  return ANSWERS
     .filter((item) => !kw || item.description.includes(kw))
-    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .sort((a, b) => b.voted_at.localeCompare(a.voted_at)) // 按投票时间越新越上
     .slice(0, 100)
 }

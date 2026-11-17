@@ -34,18 +34,14 @@
   user-select: none;
 }
 
-/* 昵称正上方的左右引号：紧挨、跨在虚线框上，对应设计稿 */
-.decoCorner {
+/* 昵称上方的双引号装饰：deco2.png 本身就是一对引号 */
+.decoPair {
   position: absolute;
-  top: -16px;
-  right: 30px;
-  width: 25px;
+  top: -21px;
+  left: 167px;
+  width: 88px;
   pointer-events: none;
   user-select: none;
-}
-
-.decoCornerLeft {
-  left: 60%;
 }
 
 
@@ -58,10 +54,10 @@
   align-items: center;
   margin: 0 93px 16px 18px;
 
-  padding: 12px 20px 40px 20px;
+  padding: 12px 20px 12px 20px;
   background: #f7f7f7;
-  border-top: 4px dashed #a8a8a8;
-  border-bottom: 4px dashed #a8a8a8;
+  border-top: 3px dashed #a8a8a8;
+  border-bottom: 3px dashed #a8a8a8;
   border-radius: 16px;
 }
 
@@ -71,7 +67,7 @@
 }
 
 .nickname {
-  margin: 7px 10px 10px;
+  margin: 7px 10px 1px;
   overflow: hidden;
   font-size: 20px;
   font-weight: 700;
@@ -81,7 +77,7 @@
 }
 
 .level {
-  margin: 7px 10px 12px;
+  margin: 7px 1px 12px;
   font-size: 13px;
   color: #3a3745;
 }
@@ -114,20 +110,10 @@
   padding: 0 16px 16px;
 }
 
-/* 搜索框左侧的小引号 */
-.decoQuote {
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  width: 10px;
-  transform: translateY(-60%);
-  pointer-events: none;
-  user-select: none;
-}
 
 .search {
   width: 98%;
-  height: 52px;
+  height: 40px;
   padding: 0 16px;
   text-align: center;
   font-size: 16px;
@@ -148,9 +134,14 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 23px 25px 24px;
+  padding: 0px 25px 24px;
   background: #f5f2d5;
-  border-radius: 24px 24px 0 0;
+
+  scrollbar-width: none;
+}
+
+.listArea::-webkit-scrollbar {
+  display: none;
 }
 
 .list {
@@ -160,7 +151,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  scrollbar-width: none;
 }
+
+
 
 .item {
   display: flex;
@@ -228,4 +222,22 @@
   border: 0;
   border-radius: 50%;
   cursor: pointer;
+}
+/*顶部的沙色条*/
+.sandTop {
+  flex: 0 0 auto;
+  height: 25px;
+  background: #f5f2d5;
+  border-radius: 16px 16px 0 0;
+}
+.sandBottom {
+  flex: 0 0 auto;
+  height: 25px;
+  background: #f5f2d5;
+  border-top: dashed #fff;
+}
+.account {
+  margin: 0 10px 4px;
+  font-size: 12px;
+  color: #707d80;
 }
