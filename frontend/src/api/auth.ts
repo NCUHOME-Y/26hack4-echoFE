@@ -1,4 +1,4 @@
-import { get, post, TOKEN_KEY } from './request'
+import { post, TOKEN_KEY } from './request'
 
 //与后端model/user.go的User输出字段一一对应
 export interface UserInfo {

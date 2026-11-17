@@ -13,7 +13,7 @@ export interface MeProfile {
   level: number
   level_progress: number
   created_at: string
-  updated_at?: string //后端json:"-"不返回，标成可选
+  updated_at: string
 }
 
 //对应GET /api/users/me/answers的list项
