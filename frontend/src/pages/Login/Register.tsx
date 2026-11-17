@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import styles from './Login.module.css'
-import { login, register, setToken } from '../../mock/auth'
+import { login, register, setToken } from '../../api/auth'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/brand/logo-trim.png'
 import clip from '../../assets/brand/decoxie.png'
