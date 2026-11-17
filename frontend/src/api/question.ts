@@ -122,3 +122,9 @@ export async function deleteComment(
   await del<DeleteCommentResult>(`/replies/${commentId}`)
   return getComments(questionId)
 }
+
+export function getQuestionDetail(
+  questionId: number,
+): Promise<QuestionDetail> {
+  return get<QuestionDetail>(`/questions/${questionId}`)
+}
