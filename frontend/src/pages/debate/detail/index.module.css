@@ -235,3 +235,234 @@
   font-size: 14px;
   color: #d92d20;
 }
+
+/* 评论区 */
+.comments {
+  margin-top: 24px;
+  padding: 16px 16px 18px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.commentHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.commentTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #33616b;
+}
+
+.commentCount {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: #8a9a9e;
+}
+
+/* 空态 */
+.commentEmpty {
+  margin: 26px 0 8px;
+  font-size: 14px;
+  color: #8a9a9e;
+  text-align: center;
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 250px;
+  margin: 6px 0 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  list-style: none;
+}
+
+.comment {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 13px 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.comment:last-child {
+  padding-bottom: 4px;
+  border-bottom: 0;
+}
+
+.commentAvatar {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  background: #eef6f8;
+  border-radius: 50%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.commentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #707d80;
+}
+
+.commentName {
+  font-weight: 650;
+  color: #33616b;
+  pointer-events: none;
+}
+
+.commentLevel {
+  margin-left: auto;
+  padding: 1px 6px;
+  font-size: 10px;
+  color: #3d9db3;
+  background: #eef6f8;
+  border-radius: 6px;
+}
+
+.commentText {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #33616b;
+  word-break: break-word;
+}
+
+/* 发评论 */
+.commentEditor {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.commentInput {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #33616b;
+  background: #f4f8f9;
+  border: 1px solid #d7ebf0;
+  border-radius: 12px;
+}
+
+.commentInput:focus {
+  border-color: #3d9db3;
+  outline: none;
+}
+
+.sendBtn {
+  flex: 0 0 auto;
+  height: 38px;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  color: #ffffff;
+  background: #3d9db3;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.sendBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.counter {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #8a9a9e;
+  text-align: right;
+}
+
+.commentError {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #822828;
+}
+
+/* 删除评论 */
+.confirmMask {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.confirmBox {
+  width: 76%;
+  max-width: 290px;
+  padding-top: 22px;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.confirmText {
+  margin: 0 0 20px;
+  padding: 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1f2b2e;
+}
+
+.confirmDivider {
+  height: 1px;
+  background: #e6e8e9;
+}
+
+.confirmActions {
+  display: flex;
+}
+
+.cancelBtn,
+.dangerBtn {
+  flex: 1;
+  height: 48px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  color: #1f2b2e;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  border-right: 1px solid #e6e8e9;
+}
+
+.cancelBtn:active,
+.dangerBtn:active {
+  background: #f3f5f5;
+}
