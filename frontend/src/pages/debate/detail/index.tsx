@@ -1,7 +1,14 @@
-import {useEffect,useState} from 'react'
+import {useEffect,useRef,useState} from 'react'
 import {useNavigate,useParams} from 'react-router-dom'
 import {getDebateDetail} from '../../../mock/debate'
 import type {DebateDetail} from '../../../mock/debate'
+import {
+  COMMENT_MAX_LEN,
+  addComment,
+  deleteComment,
+  getComments,
+} from '../../../mock/question'
+import type {CommentView} from '../../../mock/question'
 import styles from './index.module.css'
 import decoPair from '../../../assets/brand/deco2.png'
 
@@ -16,12 +23,23 @@ export default function DebateDetail(){
   // 我猜的选项；null 表示还没猜，猜完就锁定
   const [guessed, setGuessed] = useState<number | null>(null)
 
+  // 评论区（猜完之后才出现，和答题页一致）
+  const [comments, setComments] = useState<CommentView[]>([])
+  const [draft, setDraft] = useState('')
+  const [commentError, setCommentError] = useState('')
+  const [confirmId, setConfirmId] = useState<number | null>(null)
+  const pressTimer = useRef<number | null>(null)
+
   useEffect(() => {
     let cancelled = false
     setLoading(true)
     setError('')
     setDetail(null)   //题先清旧题 避免旧内容闪一下
     setGuessed(null)  //重置竞猜 否则新题一进来就显示答案
+    setComments([])
+    setDraft('')
+    setCommentError('')
+    setConfirmId(null)
     getDebateDetail(Number(id))
       .then((data) => {
         if (!cancelled) setDetail(data)
@@ -43,6 +61,53 @@ export default function DebateDetail(){
     : -1
   const finalOption = finalIndex >= 0 && detail ? detail.options[finalIndex] : null
   const isCorrect = revealed && detail?.final_option_id === guessed
+
+  // 猜完才拉评论区，进评论区取一次快照
+  useEffect(() => {
+    if (!revealed || !detail) return
+    let cancelled = false
+    getComments(detail.id).then((list) => {
+      if (!cancelled) setComments(list)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [revealed, detail])
+
+  async function handleSend() {
+    if (!detail || !draft.trim()) return
+    try {
+      const list = await addComment(detail.id, draft)
+      setComments(list)
+      setDraft('')
+      setCommentError('')
+    } catch (err) {
+      setCommentError(err instanceof Error ? err.message : '发送失败')
+    }
+  }
+
+  async function handleDelete(commentId: number) {
+    if (!detail) return
+    try {
+      const list = await deleteComment(detail.id, commentId)
+      setComments(list)
+      setConfirmId(null)
+      setCommentError('')
+    } catch (err) {
+      setCommentError(err instanceof Error ? err.message : '删除失败')
+      setConfirmId(null)
+    }
+  }
+
+  // 长按自己发的评论，弹删除确认框
+  function startPress(commentId: number) {
+    if (pressTimer.current) clearTimeout(pressTimer.current)
+    pressTimer.current = window.setTimeout(() => setConfirmId(commentId), 500)
+  }
+
+  function cancelPress() {
+    if (pressTimer.current) clearTimeout(pressTimer.current)
+  }
 
   return (
     <div className={styles.page}>
@@ -114,9 +179,97 @@ export default function DebateDetail(){
                 </p>
               </div>
             )}
+
+            {/* 评论区 */}
+            {revealed && (
+              <section className={styles.comments}>
+                <div className={styles.commentHead}>
+                  <h2 className={styles.commentTitle}>大家怎么说</h2>
+                  <span className={styles.commentCount}>共 {comments.length} 条评论</span>
+                </div>
+
+                {comments.length === 0 ? (
+                  <p className={styles.commentEmpty}>这只海螺期待听到你的想法</p>
+                ) : (
+                  <ul className={styles.commentList}>
+                    {comments.map((c) => (
+                      <li
+                        key={c.id}
+                        className={styles.comment}
+                        onPointerDown={() => {
+                          if (c.mine) startPress(c.id)
+                        }}
+                        onPointerUp={cancelPress}
+                        onPointerLeave={cancelPress}
+                        onPointerCancel={cancelPress}
+                      >
+                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+
+                        <div className={styles.commentBody}>
+                          <div className={styles.commentMeta}>
+                            <span className={styles.commentName}>匿名海螺</span>
+                            <span className={styles.commentLevel}>lv{c.level}</span>
+                          </div>
+                          <p className={styles.commentText}>{c.content}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className={styles.commentEditor}>
+                  <input
+                    className={styles.commentInput}
+                    value={draft}
+                    maxLength={COMMENT_MAX_LEN}
+                    placeholder="说点什么…"
+                    onChange={(e) => setDraft(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className={styles.sendBtn}
+                    disabled={!draft.trim()}
+                    onClick={handleSend}
+                  >
+                    发送
+                  </button>
+                </div>
+
+                <p className={styles.counter}>
+                  {draft.length}/{COMMENT_MAX_LEN}
+                </p>
+                {commentError && <p className={styles.commentError}>{commentError}</p>}
+              </section>
+            )}
           </>
         )}
       </div>
+
+      {/* 删除评论确认框 */}
+      {confirmId !== null && (
+        <div className={styles.confirmMask}>
+          <div className={styles.confirmBox}>
+            <p className={styles.confirmText}>确定删除评论吗</p>
+            <div className={styles.confirmDivider} />
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                onClick={() => setConfirmId(null)}
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                className={styles.dangerBtn}
+                onClick={() => handleDelete(confirmId)}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
