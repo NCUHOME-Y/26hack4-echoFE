@@ -153,7 +153,12 @@ export function getComments(questionId: number): Promise<CommentView[]> {
   })
 }
 
-export function addComment(questionId: number, content: string): Promise<CommentView[]> {
+// asAuthor：结算页是发问者视角，直接传 true，省得再查一道题
+export function addComment(
+  questionId: number,
+  content: string,
+  asAuthor?: boolean,
+): Promise<CommentView[]> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const text = content.trim()
@@ -168,7 +173,7 @@ export function addComment(questionId: number, content: string): Promise<Comment
 
       const list = commentsOf(questionId)
       const question = QUESTION_RUNTIME[questionId]
-      const isAuthor = question ? question.is_author : false
+      const isAuthor = asAuthor ?? (question ? question.is_author : false)
 
       if (!isAuthor) {
         const mineCount = list.filter((c) => c.mine).length
@@ -208,7 +213,11 @@ export function addComment(questionId: number, content: string): Promise<Comment
   })
 }
 
-export function deleteComment(questionId: number, commentId: number): Promise<CommentView[]> {
+export function deleteComment(
+  questionId: number,
+  commentId: number,
+  asAuthor?: boolean,
+): Promise<CommentView[]> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const list = commentsOf(questionId)
@@ -219,7 +228,7 @@ export function deleteComment(questionId: number, commentId: number): Promise<Co
       }
 
       const question = QUESTION_RUNTIME[questionId]
-      const isAuthor = question ? question.is_author : false
+      const isAuthor = asAuthor ?? (question ? question.is_author : false)
 
       // 只能删自己的；发问者可以删自己问题下的所有
       if (!target.mine && !isAuthor) {

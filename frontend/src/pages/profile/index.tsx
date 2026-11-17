@@ -1,5 +1,6 @@
 //我的：资料卡+我参与的（关键词搜索、越新越上
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Avatar from '../../components/Avatar'
 import AvatarPicker from '../../components/AvatarPicker'
 import {
@@ -16,6 +17,7 @@ import logoImg from '../../assets/brand/logo-trim.png'
 import decoPair from '../../assets/brand/deco2.png'
 
 export default function Profile() {
+  const navigate = useNavigate()
   const [me, setMe] = useState<MeProfile | null>(null)
   const [items, setItems] = useState<AnswerItem[]>([])
   const [keyword, setKeyword] = useState('')
@@ -126,10 +128,16 @@ export default function Profile() {
     const status = participationStatus(item)
     return (
       <li key={item.question_id} className={styles.item}>
-        <span className={styles.itemText}>{item.description}</span>
-        <span className={`${styles.badge} ${styles[status]}`}>
-          {PARTICIPATION_STATUS_TEXT[status]}
-        </span>
+        <button
+          type="button"
+          className={styles.itemButton}
+          onClick={() => navigate(`/answer-end/${item.question_id}`)}
+        >
+          <span className={styles.itemText}>{item.description}</span>
+          <span className={`${styles.badge} ${styles[status]}`}>
+            {PARTICIPATION_STATUS_TEXT[status]}
+          </span>
+        </button>
       </li>
     )
   })}
