@@ -63,4 +63,6 @@ export const post = <T>(url: string, data?: unknown) =>
 export const patch = <T>(url: string, data?: unknown) =>
   request<T>({ method: 'PATCH', url, data })
 
+export const put = <T>(url: string, data?: unknown) =>
+  request<T>({ method: 'PUT', url, data })
 export const del = <T>(url: string) => request<T>({ method: 'DELETE', url })

@@ -1,4 +1,4 @@
-import {del,get,post } from './request'
+import {del,get,post,put } from './request'
 
 export interface QuestionOption {
   id: number
@@ -127,4 +127,20 @@ export function getQuestionDetail(
   questionId: number,
 ): Promise<QuestionDetail> {
   return get<QuestionDetail>(`/questions/${questionId}`)
+}
+export interface FinalResult {
+  question_id: number
+  final_option_id: number
+}
+
+export async function settleQuestion(
+  questionId: number,
+  optionId: number,
+): Promise<QuestionDetail> {
+  await put<FinalResult>(`/questions/${questionId}/final`, {
+    option_id: optionId,
+  })
+
+  //PUT只返回题目和选项ID，重新获取完整的已结算详情
+  return getQuestionDetail(questionId)
 }

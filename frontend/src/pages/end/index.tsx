@@ -5,15 +5,19 @@ import styles from './index.module.css'
 import decoPair from '../../assets/brand/deco2.png'
 import cryImg from '../../assets/brand/cry.png'
 import timeIcon from '../../assets/brand/time.png'
-import { getSettleQuestion, settleQuestion } from '../../mock/end'
-import type { SettleQuestion } from '../../mock/end'
 import {
   COMMENT_MAX_LEN,
+  getQuestionDetail,
+  settleQuestion,
+  getComments,
   addComment,
   deleteComment,
-  getComments,
-} from '../../mock/question'
-import type { CommentView } from '../../mock/question'
+} from '../../api/question'
+import type {
+  QuestionDetail,
+  CommentView,
+} from '../../api/question'
+import { avatarUrl } from '../../assets/avatars'
 
 const LETTERS = ['A', 'B', 'C', 'D']
 
@@ -36,7 +40,7 @@ export default function End() {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const [question, setQuestion] = useState<SettleQuestion | null>(null)
+  const [question, setQuestion] = useState<QuestionDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -49,40 +53,44 @@ export default function End() {
   const [confirmId, setConfirmId] = useState<number | null>(null)
   const pressTimer = useRef<number | null>(null)
 
-  useEffect(() => {
+
     const qid = Number(id)
-    if (!Number.isFinite(qid) || qid <= 0) {
-      setError('这只海螺找不到')
-      setLoading(false)
-      return
-    }
-    let cancelled = false
-    getSettleQuestion(qid)
-      .then((data) => {
-        if (cancelled) return
-        if (!data) {
-          setError('这只海螺已经不在海里了')
-          return
-        }
-        setQuestion(data)
-        setPicked(data.picked_option_id)
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : '海螺打捞失败')
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [id])
+    const invalidId = !Number.isInteger(qid) || qid <= 0
 
-  const settled = question?.settled_at != null
-  const hasVotes = (question?.total_votes ?? 0) > 0
-  const total = question?.total_votes ?? 0
-  const expired = question ? new Date(question.expires_at).getTime() < Date.now() : false
+    useEffect(() => {
+      if (invalidId) return
+    
+      let cancelled = false
+    
+      getQuestionDetail(qid)
+        .then((data) => {
+          if (cancelled) return
+          setError('')
+          setQuestion(data)
+          setPicked(data.final_option_id)
+        })
+        .catch((err) => {
+          if (!cancelled) {
+            setError(err instanceof Error ? err.message : '海螺打捞失败')
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false)
+        })
+      
+      return () => {
+        cancelled = true
+      }
+    }, [qid, invalidId])
 
+    const settled = question?.settled_at != null
+    const hasVotes = (question?.total_votes ?? 0) > 0
+    const total = question?.total_votes ?? 0
+    const expired = question?.status === 'closed'
+
+    const displayLoading = invalidId ? false : loading
+    const displayError = invalidId ? '这只海螺找不到' : error
+  
   useEffect(() => {
     if (!question || !hasVotes) return
     let cancelled = false
@@ -94,18 +102,17 @@ export default function End() {
     }
   }, [question, hasVotes])
 
-  function percent(votes: number): number {
-    if (!total) return 0
-    return Math.round((votes / total) * 100)
-  }
+  
 
   async function handleSettle() {
-    if (!question || submitting) return
+    if (!question || picked === null || submitting) return
+     
     setSubmitting(true)
+     
     try {
-      const next = await settleQuestion(question.id, hasVotes ? picked : null)
+      const next = await settleQuestion(question.id, picked)
       setQuestion(next)
-      setPicked(next.picked_option_id)
+      setPicked(next.final_option_id)
     } catch (err) {
       setError(err instanceof Error ? err.message : '收回失败')
     } finally {
@@ -119,7 +126,7 @@ export default function End() {
     if (!text) return
     try {
       // 发问者视角
-      const list = await addComment(question.id, text, true)
+      const list = await addComment(question.id, text)
       setComments(list)
       setDraft('')
       setCommentError('')
@@ -131,7 +138,7 @@ export default function End() {
   async function handleDelete(commentId: number) {
     if (!question) return
     try {
-      const list = await deleteComment(question.id, commentId, true)
+      const list = await deleteComment(question.id, commentId)
       setComments(list)
       setConfirmId(null)
       setCommentError('')
@@ -166,10 +173,14 @@ export default function End() {
       </header>
 
       <div className={styles.board}>
-        {loading && <p className={styles.hint}>正在打捞这只海螺…</p>}
-        {!loading && error && <p className={styles.hint}>{error}</p>}
-
-        {!loading && !error && question && (
+        {displayLoading && (
+          <p className={styles.hint}>正在打捞这只海螺…</p>
+        )}
+        {!displayLoading && displayError && (
+          <p className={styles.hint}>{displayError}</p>
+        )}
+        
+        {!displayLoading && !displayError && question && (
           <>
             <section className={styles.card}>
               <p className={styles.question}>{question.description}</p>
@@ -209,9 +220,10 @@ export default function End() {
             {hasVotes && (
               <div className={styles.options}>
                 {question.options.map((opt, index) => {
-                  const pct = percent(opt.votes)
                   const isPicked = picked === opt.id
-                  const isFinal = settled && question.picked_option_id === opt.id
+                  const isFinal =
+                    settled && question.final_option_id === opt.id
+
                   const className = [
                     styles.option,
                     !settled && isPicked ? styles.optionSelected : '',
@@ -219,6 +231,7 @@ export default function End() {
                   ]
                     .filter(Boolean)
                     .join(' ')
+
                   return (
                     <button
                       key={opt.id}
@@ -229,11 +242,11 @@ export default function End() {
                     >
                       <span className={styles.letter}>{LETTERS[index]}</span>
                       <span className={styles.optionLabel}>
-                        {opt.text}
+                        {opt.label}
                         {isFinal && <em className={styles.tag}>最终选择</em>}
                       </span>
                       <span className={styles.votes}>{opt.votes} 人</span>
-                      <span className={styles.percent}>{pct}%</span>
+                      <span className={styles.percent}>{opt.percent}%</span>
                     </button>
                   )
                 })}
@@ -241,7 +254,7 @@ export default function End() {
             )}
 
             {/* 收回区：紧跟选项白卡下面（公布后不出现） */}
-            {!settled && (
+            {!settled && hasVotes && (
               <section className={styles.sandEdge}>
                 <div className={styles.expirePill}>
                   <img className={styles.pillIcon} src={timeIcon} alt="" />
@@ -255,7 +268,7 @@ export default function End() {
                 <button
                   type="button"
                   className={styles.settleBtn}
-                  disabled={submitting || (hasVotes && picked === null)}
+                  disabled={submitting || (picked === null)}
                   onClick={handleSettle}
                 >
                   {submitting ? '收回中…' : '收回海螺'}
@@ -284,8 +297,9 @@ export default function End() {
                 </div>
                 <p className={styles.verdictText}>
                   {hasVotes
-                    ? (question.options.find((o) => o.id === question.picked_option_id)?.text ??
-                      '没有公布')
+                    ? (question.options.find(
+                        (option) => option.id === question.final_option_id,
+                      )?.label ?? '没有公布')
                     : '下次丢出去，也许就有人捡到了。'}
                 </p>
               </section>
@@ -312,11 +326,15 @@ export default function End() {
                         onPointerLeave={cancelPress}
                         onPointerCancel={cancelPress}
                       >
-                        <img className={styles.commentAvatar} src={c.avatar} alt="" />
+                        <img
+                          className={styles.commentAvatar}
+                          src={avatarUrl(c.author.avatar)}
+                          alt=""  
+                        />
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
                             <span className={styles.commentName}>匿名海螺</span>
-                            <span className={styles.commentLevel}>lv{c.level}</span>
+                            <span className={styles.commentLevel}>lv{c.author.level}</span>
                           </div>
                           <p className={styles.commentText}>{c.content}</p>
                         </div>
