@@ -167,6 +167,25 @@
   box-shadow: 0 1px 2px rgba(17, 17, 17, 0.04);
 }
 
+/* 点整条进作答者结算页 */
+.itemButton {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px 0;
+  font-family: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.itemButton:active {
+  opacity: 0.72;
+}
+
 .itemText {
   flex: 1;
   min-width: 0;

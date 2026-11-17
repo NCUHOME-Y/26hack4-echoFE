@@ -32,6 +32,8 @@ const MY_QUESTIONS: MyQuestion[] = [
   { id: 204, description: '要不要为了合群参加不想去的聚会', status: 'closed', expires_at: hoursAgo(6), created_at: hoursAgo(30), settled_at: hoursAgo(6), contested_at: hoursAgo(6), total_votes: 96 },
   { id: 205, description: '这条已结算 25 小时，应该看不到', status: 'closed', expires_at: hoursAgo(25), created_at: hoursAgo(50), settled_at: hoursAgo(25), contested_at: null, total_votes: 40 },
   { id: 206, description: '早上跑步还是晚上跑步', status: 'closed', expires_at: hoursAgo(20), created_at: hoursAgo(44), settled_at: hoursAgo(20), contested_at: null, total_votes: 22 },
+  // 一条投票都没有：用来验证结算页的「没人捡起海螺」空态
+  { id: 207, description: '还没人捡起这颗海螺：周五晚上要不要去看球', status: 'open', expires_at: hoursAgo(-8), created_at: hoursAgo(2), settled_at: null, contested_at: null, total_votes: 0 },
 ]
 
 // 已结算只留 24h 内；未结算在上、已结算在下；组内越新越上；最多 20 条
