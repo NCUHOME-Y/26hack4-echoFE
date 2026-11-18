@@ -44,21 +44,23 @@
 } 
 
 .clip{
-  position: relative;
-  z-index: 1;           
-  top: 25px;            
+  position: absolute;
+  z-index: 2;           
+  top: -18px; 
+  left: 2px;           
   width: 25px;
   pointer-events: none;
 }
 
 /* 登录注册 */
 .card {
+  position: relative;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 20px;
-  min-height: 490px;
+  min-height: 420px;
   border-radius: 20px;
   background: #abe3eb;
   box-shadow:
