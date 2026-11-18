@@ -99,7 +99,7 @@ export default function Home() {
               <article
                 key={item.id}
                 className={styles.disputeCard}
-                onClick={() => navigate('/debate')}
+                onClick={() => navigate(`/debate/${item.id}`)}
               >
                 <h3 className={styles.disputeTitle}>{item.description}</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
