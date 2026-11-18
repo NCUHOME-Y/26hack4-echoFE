@@ -146,7 +146,7 @@
 .settledButton {
   color: #33616b;
   background: #ffffff;
-  cursor: default;
+  cursor: pointer;
 }
 
 .empty,

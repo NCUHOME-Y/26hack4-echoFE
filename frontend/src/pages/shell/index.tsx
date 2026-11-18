@@ -80,12 +80,9 @@ export default function Shell() {
                     <button
                       type="button"
                       className={`${styles.pickButton} ${settled ? styles.settledButton : ''}`}
-                      disabled={settled}
-                      onClick={() => {
-                        if (!settled) navigate(settlePath(item.id))
-                      }}
+                      onClick={() => navigate(settlePath(item.id))}
                     >
-                      {settled ? '已结算' : '去结算'}
+                      {settled ? '查看结果' : '去结算'}
                     </button>
                   </div>
                 </li>
