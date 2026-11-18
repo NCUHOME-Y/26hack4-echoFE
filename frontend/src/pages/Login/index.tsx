@@ -62,12 +62,9 @@ export default function Login() {
       </div>
 
       <div className={styles.spacer} aria-hidden="true" />
-
-      <div className={styles.clipCard}>
-        <img className={styles.clip} src={clip} alt="clip"/>
-      </div>
-
+      
       <section className={styles.card}>
+        <img className={styles.clip} src={clip} alt="clip"/>
         <div className={styles.seg} role="tablist" aria-label="登录或注册">
           <button
             type="button"

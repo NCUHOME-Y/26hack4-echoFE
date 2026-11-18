@@ -82,13 +82,10 @@ export default function Register() {
         <img className={styles.logo} src={logo} alt="logo" />
       </div>
 
-      <div className={styles.clipCard}>
-        <img className={styles.clip} src={clip} alt="clip"/>
-      </div>
-
       <div className={styles.spacer} aria-hidden="true" />
 
       <section className={styles.card}>
+        <img className={styles.clip} src={clip} alt="clip"/>
         <div className={styles.seg} role="tablist" aria-label="登录或注册">
           <button
             type="button"
