@@ -44,9 +44,9 @@
 } 
 
 .clip{
-  position: absolute;
+  position: relative;
   z-index: 1;           
-  top: 335px;            
+  top: 25px;            
   width: 25px;
   pointer-events: none;
 }
