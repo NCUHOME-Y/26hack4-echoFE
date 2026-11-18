@@ -43,7 +43,7 @@ export default function Profile() {
   //搜索词一变就重新查
   useEffect(() => {
     let cancelled = false
-    setListLoading(true)
+
     getMyParticipations(keyword)
       .then((list) => {
         if (!cancelled) setItems(list)
@@ -98,7 +98,10 @@ export default function Profile() {
           className={styles.search}
           type="search"
           value={keyword}
-          onChange={(event) => setKeyword(event.target.value)}
+          onChange={(event) => {
+            setListLoading(true)
+            setKeyword(event.target.value)
+          }}
           placeholder="输入关键词搜索"
           aria-label="搜索我参与过的海螺"
           enterKeyHint="search"
@@ -106,15 +109,17 @@ export default function Profile() {
       </div>
       <div className={styles.sandTop} aria-hidden="true" />
 
-      <AvatarPicker
-        open={pickerOpen}
-        value={me?.avatar}
-        onClose={() => setPickerOpen(false)}
-        onConfirm={async (avatar) => {
-          await updateAvatar(avatar)
-          setMe((prev) => (prev ? { ...prev, avatar } : prev))
-        }}
-      />
+      {pickerOpen && (
+        <AvatarPicker
+          open={pickerOpen}
+          value={me?.avatar}
+          onClose={() => setPickerOpen(false)}
+          onConfirm={async (avatar) => {
+            await updateAvatar(avatar)
+            setMe((prev) => (prev ? { ...prev, avatar } : prev))
+          }}
+        />
+      )}
 
       <section className={styles.listArea}>
         {error && <p className={styles.error}>{error}</p>}

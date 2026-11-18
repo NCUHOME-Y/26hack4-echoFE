@@ -12,19 +12,12 @@ interface AvatarPickerProps {
 }
 
 export default function AvatarPicker({ open, value, onClose, onConfirm }: AvatarPickerProps) {
-  const [index, setIndex] = useState(0)
+  const currentIndex = AVATAR_IDS.findIndex((id) => id === value)
+  const [index, setIndex] = useState(currentIndex === -1 ? 0 : currentIndex)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  // 每次打开时从当前头像开始
-  useEffect(() => {
-    if (!open) return
-    const currentIndex = AVATAR_IDS.findIndex((id) => id === value)
-    setIndex(currentIndex === -1 ? 0 : currentIndex)
-    setSaving(false)
-    setError('')
-  }, [open, value])
-
+  
   // Esc 关闭，← → 轮换
   useEffect(() => {
     if (!open) return
