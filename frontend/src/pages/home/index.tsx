@@ -10,7 +10,6 @@ import clipLeft from '../../assets/brand/deco-1.png'
 import clipCenter from '../../assets/brand/deco-2.png'
 import clipRight from '../../assets/brand/deco-3.png'
 import shellLogo from '../../assets/brand/shell.png'
-import arrow from '../../assets/home/vector-p.png'
 import statsIcon from '../../assets/home/Vector-2.png'
 
 
@@ -106,10 +105,6 @@ export default function Home() {
                 <p className={styles.disputeText}>
                   {item.options.map((option) => option.label).join(' / ')}
                 </p>
-                <div className={styles.waitingText}>
-                  <img className={styles.disputeArrow} src={arrow} alt="" aria-hidden="true" />
-                  <p className={styles.disputeMore}>等待你的关键一票</p>
-                </div>
               </article>
             ))}
           </div>

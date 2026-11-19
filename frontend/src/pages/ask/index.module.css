@@ -130,6 +130,7 @@
   padding: 12px;
   background: #f5f2d5;
   border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .optTitle {
