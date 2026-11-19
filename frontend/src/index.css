@@ -26,7 +26,7 @@ body {
    height 用 dvh（不要 100vh，Safari 地址栏收起时底部会被切掉）。 */
 #root {
   width: 100%;
-  max-width: 393px;
+  /* max-width: 393px; */
   height: 100dvh;
   margin: 0 auto;
   background: #fff;
