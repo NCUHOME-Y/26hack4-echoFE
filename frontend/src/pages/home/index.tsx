@@ -25,6 +25,11 @@ function formatDate(d: Date) {
   return `${d.getMonth() + 1}月${d.getDate()}日`
 }
 
+//首页争议 每个选项最多显示7个字 超出用省略号
+function shorten(label: string) {
+  return label.length > 7 ? `${label.slice(0, 7)}…` : label
+}
+
 export default function Home() {
   const [data, setData] = useState<HomeData | null>(null)
   const [error, setError] = useState('')
@@ -102,15 +107,16 @@ export default function Home() {
               >
                 <h3 className={styles.disputeTitle}>{item.description}</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
-                <p className={styles.disputeText}>
+          
                 <div className={styles.disputeText}>
                   {item.options.map((option) => (
                     <span key={option.id} className={styles.disputeOption}>
-                      {option.label}
+                      {shorten(option.label)}
                     </span>
                   ))}
                 </div>
-                </p>
+
+                
               </article>
             ))}
           </div>
