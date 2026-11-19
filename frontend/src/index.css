@@ -91,3 +91,7 @@ svg {
     scroll-behavior: auto !important;
   }
 }
+/* 临时：统一微软雅黑。删掉这一段即完全恢复原样 */
+* {
+  font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', sans-serif !important;
+}
