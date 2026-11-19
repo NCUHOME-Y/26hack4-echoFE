@@ -193,6 +193,85 @@
   opacity: 1;
 }
 
+/* 没人作答时的选项卡 */
+.optionTabs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px 14px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.optionTab {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  color: #33616b;
+  background: #e3e3e3;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.optionTab:active {
+  background: #d9d9d9;
+}
+
+.optionTab:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.optionTab.optionTabActive {
+  color: #0d4f5e;
+  background: #abe5eb;
+  border-color: #3d9db3;
+}
+
+.optionTab.optionTabFinal {
+  color: #ffffff;
+  background: #3d9db3;
+  border-color: #3d9db3;
+}
+
+.tabLetter {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  color: #000000;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.tabLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionTabActive .tabLetter,
+.optionTabFinal .tabLetter {
+  color: #0d4f5e;
+}
+
 /* 选择结果 */
 .optionSelected {
   color: #0d4f5e;
