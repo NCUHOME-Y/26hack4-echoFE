@@ -10,6 +10,7 @@
   min-height: 100%;
   padding-bottom: 0;
   overflow-x: hidden;
+  animation: pageUp 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
   background: linear-gradient(to bottom, #abe5eb 0 30%, #f4fdff 30% 100%);
   font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
     'Microsoft YaHei', sans-serif;
@@ -366,4 +367,13 @@
   border: 0;
   border-radius: 12px;
   cursor: pointer;
+}
+/* 丢出海螺页入场：从屏幕底部整页滑上来 */
+@keyframes pageUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
