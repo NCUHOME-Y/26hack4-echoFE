@@ -103,7 +103,13 @@ export default function Home() {
                 <h3 className={styles.disputeTitle}>{item.description}</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
                 <p className={styles.disputeText}>
-                  {item.options.map((option) => option.label).join(' / ')}
+                <div className={styles.disputeText}>
+                  {item.options.map((option) => (
+                    <span key={option.id} className={styles.disputeOption}>
+                      {option.label}
+                    </span>
+                  ))}
+                </div>
                 </p>
               </article>
             ))}
