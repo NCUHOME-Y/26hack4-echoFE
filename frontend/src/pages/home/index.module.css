@@ -12,9 +12,11 @@
 
 .page {
   height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 24px 16px 16px;
   box-sizing: border-box;
-  background:linear-gradient(to bottom, #ABE5EB 0 30%, #F2FDFF 30% 100%);
+  background: linear-gradient(to bottom, #ABE5EB 0 30%, #F2FDFF 30% 100%);
 }
 
 .greeting {
@@ -138,7 +140,7 @@
 
 /* 争议 */
 .section {
-  margin-top: 50px;
+  margin-top: 70px;
 }
 
 .sectionCard {
