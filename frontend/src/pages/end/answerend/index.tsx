@@ -216,10 +216,19 @@ export default function AnswerEnd() {
                     ? `海螺已在${expireLabel(question.expires_at).replaceAll(' ', '')}被收回。`
                     : `海螺将在${expireLabel(question.expires_at).replaceAll(' ', '')}被收回。`
                   : question.final_option_id === null
-                    ? '这只海螺已经沉入深海啦~'
+                    ? <>
+                    这只海螺已经沉入深海，
+                    { question.my_vote&& (
+                      <span className={styles.gainInline}>
+                      已经给您补偿了15积分
+                      </span>
+                     )}
+                     </>
                     : (question.options.find((o) => o.id === question.final_option_id)?.label ??
                       '没有公布')}
               </p>
+
+              
               {gain > 0 && (
                 <p className={styles.gain}>
                   猜中发布者的选择，获得25积分
