@@ -87,6 +87,9 @@ export default function End() {
     const hasVotes = (question?.total_votes ?? 0) > 0
     const total = question?.total_votes ?? 0
     const expired = question?.status === 'closed'
+    const expirePassed = question
+      ? new Date(question.expires_at).getTime() <= Date.now()
+      : false
 
     const displayLoading = invalidId ? false : loading
     const displayError = invalidId ? '这只海螺找不到' : error
@@ -196,6 +199,37 @@ export default function End() {
               </p>
             </section>
 
+            {/* 没人作答 */}
+            {!hasVotes && !settled && (
+              <section className={styles.optionTabs} aria-label="最终选择">
+                {question.options.map((opt, index) => {
+                  const isPicked = picked === opt.id
+                  const isFinal = settled && question.final_option_id === opt.id
+
+                  const className = [
+                    styles.optionTab,
+                    !settled && isPicked ? styles.optionTabActive : '',
+                    isFinal ? styles.optionTabFinal : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')
+
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      className={className}
+                      disabled={settled}
+                      onClick={() => setPicked(opt.id)}
+                    >
+                      <span className={styles.tabLetter}>{LETTERS[index]}</span>
+                      <span className={styles.tabLabel}>{opt.label}</span>
+                    </button>
+                  )
+                })}
+              </section>
+            )}
+
             {/* 没人作答空态 */}
             {!hasVotes && expired && (
               <section className={styles.emptyCard}>
@@ -210,9 +244,7 @@ export default function End() {
             {!hasVotes && !expired && (
               <section className={styles.emptyCard}>
                 <p className={styles.emptyTitle}>这颗海螺还在海里漂着</p>
-                <p className={styles.emptyFoot}>
-                  还没有人捡起它，{expireLabel(question.expires_at)}截止，再回来看看
-                </p>
+                
               </section>
             )}
 
@@ -253,14 +285,14 @@ export default function End() {
               </div>
             )}
 
-            {/* 收回区：紧跟选项白卡下面（公布后不出现） */}
-            {!settled && hasVotes && (
+            {/* 收回区 */}
+            {!settled && (
               <section className={styles.sandEdge}>
                 <div className={styles.expirePill}>
                   <img className={styles.pillIcon} src={timeIcon} alt="" />
                   <span className={styles.pillText}>
                     <span className={styles.pillLabel}>
-                      {expired ? '已截止于:' : '截止时间:'}
+                      {expirePassed ? '已截止于:' : '截止时间:'}
                     </span>
                     <span className={styles.pillValue}>{expireLabel(question.expires_at)}</span>
                   </span>
@@ -287,7 +319,7 @@ export default function End() {
                     <img className={styles.pillIcon} src={timeIcon} alt="" />
                     <span className={styles.pillText}>
                       <span className={styles.pillLabel}>
-                        {expired ? '已截止于:' : '截止时间:'}
+                        {expirePassed ? '已截止于:' : '截止时间:'}
                       </span>
                       <span className={styles.pillValue}>
                         {expireLabel(question.expires_at)}
