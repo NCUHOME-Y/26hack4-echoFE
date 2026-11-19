@@ -83,13 +83,17 @@ export default function AnswerEnd() {
     ? question.status === 'closed' && !settled
     : false
 
-  // 积分由后端在结算时发放，前端只展示是否猜中
-  const gain =
-    question &&
-    settled &&
-    question.final_option_id !== null &&
-    question.my_vote?.option_id === question.final_option_id
-      ? 25
+  // 改成（数值直接按后端 model/exp.go 写，就地定义，不跨文件）
+  const EXP_SETTLE_MATCH = 25   // 与后端 ExpSettleMatch 一致
+  const EXP_SETTLE_MISS = 5     // 与后端 ExpSettleMiss 一致
+  const EXP_SETTLE_FAILED = 15  // 与后端 ExpSettleFailed 一致
+  const mySettleExp =
+     question && settled && question.my_vote
+      ? question.final_option_id === null
+        ? EXP_SETTLE_FAILED
+        : question.my_vote.option_id === question.final_option_id
+          ? EXP_SETTLE_MATCH
+          : EXP_SETTLE_MISS
       : 0
 
   const displayLoading = invalidId ? false : loading
@@ -220,7 +224,7 @@ export default function AnswerEnd() {
                     这只海螺已经沉入深海，
                     { question.my_vote&& (
                       <span className={styles.gainInline}>
-                      已经给您补偿了15积分
+                      已经给您补偿了{EXP_SETTLE_FAILED}积分
                       </span>
                      )}
                      </>
@@ -229,11 +233,14 @@ export default function AnswerEnd() {
               </p>
 
               
-              {gain > 0 && (
+              {settled && question.final_option_id !== null && question.my_vote && (
                 <p className={styles.gain}>
-                  猜中发布者的选择，获得25积分
+                  {question.my_vote.option_id === question.final_option_id
+                    ? `猜中发布者的选择，获得${mySettleExp}积分`
+                    : `投出这一票获得$mySettleExp}积分`}
                 </p>
               )}
+
             </section>
 
             {/* 评论区：投票后能看 */}
