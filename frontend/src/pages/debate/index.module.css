@@ -11,13 +11,14 @@
 
 .hero {
   position: relative;
-  padding: 18px 22px 22px;
+  padding: 18px 26px 22px;
 }
 /* 在青色和沙色交界线上的引号，不参与布局 */
 .decoPair {
   position: absolute;
   right: 14px;
-  bottom: -22px;
+  bottom: 0;
+  transform: translateY(50%);
   z-index: 1;
   width: 90px;
   pointer-events: none;
@@ -43,7 +44,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 16px 22px;
+  padding: 16px 26px;
   background: #f5f2d5;
   scrollbar-width: none;
 }

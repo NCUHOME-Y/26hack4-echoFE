@@ -12,12 +12,13 @@
 /* 和争议页同一套 hero */
 .hero {
   position: relative;
-  padding: 18px 22px 22px;
+  padding: 18px 26px 22px;
 }
 .decoPair {
   position: absolute;
   right: 14px;
-  bottom: -22px;
+  bottom: 0;
+  transform: translateY(50%);
   z-index: 1;
   width: 90px;
   pointer-events: none;
@@ -47,7 +48,7 @@
 /* 沙色顶下面固定搜索栏，不跟着列表滚 */
 .searchBar {
   flex: 0 0 auto;
-  padding: 0 22px 12px;
+  padding: 0 26px 12px;
   background: #f5f2d5;
 }
 .search {
@@ -73,7 +74,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px 22px 16px;
+  padding: 4px 26px 16px;
   background: #f5f2d5;
   scrollbar-width: none;
 }
