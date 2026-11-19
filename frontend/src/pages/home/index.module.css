@@ -11,12 +11,21 @@
 }
 
 .page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  row-gap: 12px;
   height: 100%;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  padding: 24px 16px 16px;
+  padding: 20px 16px 12px;
   box-sizing: border-box;
   background: linear-gradient(to bottom, #ABE5EB 0 30%, #F2FDFF 30% 100%);
+}
+
+.page > header {
+  flex: 0 0 auto;
+  padding-left: 14px;
 }
 
 .greeting {
@@ -65,17 +74,19 @@
 
 .sweepwrap {
   position: relative;
-  width: 100%;
-  height: 220px;
+  width: 92%;
+  margin: 0 auto;
+  flex: 0 1 220px;
+  min-height: 160px;
 }
 
 .sweepBg {
-  position: relative;
+  position: absolute;
   left: 0;
   top: 20px;
   width: 100%;
-  height: 200px;
-  object-fit: fill;
+  height: calc(100% - 20px);
+  object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -98,49 +109,59 @@
 
 .slogan {
   position: absolute;
-  z-index: 1; 
-  font-size: 25px;
-  top:15px;
-  left:10px;
+  z-index: 1;
+  top: 12px;
+  left: 10px;
+  font-size: clamp(20px, 5.4vw, 25px);
   color: #2A2166;
   pointer-events: none;
 }
 
 .sloganDesc {
   position: absolute;
-  z-index: 1; 
+  z-index: 1;
+  top: 46px;
+  left: 10px;
   font-size: 12px;
-  left:10px;
-  top:55px;
   color: #8b4bad;
 }
 
-
 .sweepText {
   position: absolute;
-  top: 100px;
   left: 50%;
+  bottom: 9%;
   transform: translateX(-50%);
+  z-index: 10;
 
-  z-index: 10;           
-  font-family: 'chongshua', 'STKaiti', 'KaiTi', cursive;
-  font-size: 42px;
-  line-height: 1.2;
-  letter-spacing: 8px;
-  color: #8AB58A;
-  -webkit-text-stroke: 0.2px #c2f595;
-  
+  min-width: 60%;
+  padding: 16px 0;
+  font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', sans-serif;
+  font-size: clamp(26px, 8vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 3px;
+  text-align: center;
+  white-space: nowrap;
+  color: #4b7f4b;
+
+  background: transparent;
   border: 2px solid #ffffff;
-  border-radius: 10px;
-  padding: 4px 8px;
-  display: inline-block;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+}
+
+.sweepText:active {
+  transform: translateX(-50%) scale(0.97);
 }
 
 /* 争议 */
 .section {
-  margin-top: 70px;
+  flex: 0 0 auto;
+  width: 92%;
+  margin: 0 auto;
 }
 
 .sectionCard {
@@ -170,7 +191,7 @@
   display: flex;
   gap: 10px;
   padding-bottom: 4px;
-  overflow-x: none; 
+  overflow-x: auto; 
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -184,23 +205,19 @@
 .disputeCard {
   flex: 0 0 62%;
   position: relative;
-  padding: 16px;
-  padding-top: 16px;
   box-sizing: border-box;
+  min-height: 150px;
+  padding: 16px 16px 30px;
   background: #fff;
-  border: 1px solid #e3e8ee;
+  border: 5px solid #9AC8E6;
   border-radius: 25px;
   scroll-snap-align: start;
   cursor: pointer;
-  justify-content: space-between;
-  padding: 16px;
-  padding-bottom: 36px;
-  border:5px solid #9AC8E6;
 }
 
 .disputeTitle {
   margin: 0;
-  padding-right: 40px;
+  padding-right: 8px;
   font-size: 18px;
   font-family: 'alimama', 'STKaiti', 'KaiTi', cursive;
   font-weight: 600;
@@ -208,7 +225,7 @@
   line-height: 1.4;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 限制 2 行 */
+  -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
   overflow-wrap: anywhere;
@@ -231,9 +248,9 @@
 
 .disputeShell {
   position: absolute;
-  top: 20px;
   right: 10px;
-  width: 45px;
+  bottom: 8px;
+  width: 30px;
   object-fit: contain;
   z-index: 1;
 }
@@ -244,15 +261,12 @@
 
 /* 数据 */
 .statsCard {
+  flex: 0 0 auto;
   box-sizing: border-box;
+  margin: 0 -16px 0;
+  padding: 10px 16px 14px;
   background-color: #9AECF5;
-  border-radius: 18px 18px 0 0;     
-  padding: 2px;
-  padding-bottom: 50px;
-  margin-top: 24px;
-  margin-bottom: 16px;
-  margin-left: -16px;
-  margin-right: -16px;
+  border-radius: 18px;
 }
 
 .statsTitle {
@@ -330,4 +344,30 @@
   padding: 16px 0;
   font-size: 12px;
   color: #9aa5b1;
+}
+/* 页面可用高度=屏高−TabBar 667和640的必须压缩 不然放不下 */
+@media (max-height: 760px) {
+  .page { padding-top: 14px; }
+  .greeting { font-size: 30px; }
+  .sweepwrap { flex-basis: 200px; }
+
+  .disputeCard {
+  min-height: 132px;
+  padding: 12px 12px 24px;
+  }
+  .disputeTitle { font-size: 16px; }
+  .disputeText { margin: 6px 0; }
+  .statsCard { padding: 8px 16px 10px; }
+  .statsTitle { margin-bottom: 6px; font-size: 15px; }
+  .stats { padding-bottom: 12px; }
+  .statValue { font-size: 22px; }
+}
+@media (max-height: 620px) {
+  .greeting { font-size: 26px; }
+  .sweepwrap { flex-basis: 180px; min-height: 150px; }
+  .disputeTitle { font-size: 15px; }
+  .disputeCard { padding-bottom: 10px; }
+  .statsTitle { font-size: 14px; }
+  .statValue { font-size: 19px; }
+  .stats { padding-bottom: 8px; }
 }

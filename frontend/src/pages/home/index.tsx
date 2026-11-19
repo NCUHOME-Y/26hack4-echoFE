@@ -66,17 +66,17 @@ export default function Home() {
         <img className={styles.clipCenter} src={clipCenter} alt="" aria-hidden="true" />
         <img className={styles.clipRight} src={clipRight} alt="" aria-hidden="true" />
       
-        <div className={styles.topTextWrapper}>
+        {/* <div className={styles.topTextWrapper}> */}
           <h2 className={styles.slogan}>去沙滩上，捡一只海螺</h2>
           <p className={styles.sloganDesc}>随机一个问题，投出你的选择</p>
-        </div>
+        {/* </div> */}
         <div
           className={styles.sweepText}
           onClick={() => navigate('/question')}
           role="button"
           tabIndex={0}
         >
-          冲刷<br/>海滩
+          冲刷海滩
         </div>
       </div>
 
