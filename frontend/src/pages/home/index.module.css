@@ -47,7 +47,7 @@
 
 
 /* 海滩 */
-.sweepCard {
+/* .sweepCard {
   position: relative;
   z-index: 0;           
   display: block;
@@ -59,21 +59,20 @@
   background: none;
   border: none;
   -webkit-tap-highlight-color: transparent;
-}
+} */
 
 .sweepwrap {
   position: relative;
   width: 100%;
-  height: 200px;
-  
+  height: 220px;
 }
 
 .sweepBg {
   position: relative;
-  left:0;
+  left: 0;
   top: 20px;
   width: 100%;
-  height: 100%;
+  height: 200px;
   object-fit: fill;
   border-radius: 14px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
