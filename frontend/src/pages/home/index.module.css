@@ -237,20 +237,7 @@
   z-index: 1;
 }
 
-.waitingText {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  bottom: 8px;
-  right: 20px;
-  font-size: 12px;
-  color: #b7b7b7;
-}
-.disputeArrow {
-  width: 6px;
-  margin-right: 8px;
-  object-fit: contain;
-} 
+
 
 
 

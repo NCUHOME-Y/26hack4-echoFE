@@ -83,10 +83,10 @@ export default function AnswerEnd() {
     ? question.status === 'closed' && !settled
     : false
 
-  // 改成（数值直接按后端 model/exp.go 写，就地定义，不跨文件）
-  const EXP_SETTLE_MATCH = 25   // 与后端 ExpSettleMatch 一致
-  const EXP_SETTLE_MISS = 5     // 与后端 ExpSettleMiss 一致
-  const EXP_SETTLE_FAILED = 15  // 与后端 ExpSettleFailed 一致
+// 积分
+  const EXP_SETTLE_MATCH = 25  
+  const EXP_SETTLE_MISS = 5    
+  const EXP_SETTLE_FAILED = 15  
   const mySettleExp =
      question && settled && question.my_vote
       ? question.final_option_id === null
