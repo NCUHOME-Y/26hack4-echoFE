@@ -251,6 +251,14 @@
   color: #3d9db3;
 }
 
+.gainInline {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3d9db3;
+}
+
+
 /* 评论区 */
 .comments {
   margin-top: 24px;
