@@ -10,6 +10,7 @@
   flex-direction: column;
   min-height: 100%;
   overflow-x: hidden;
+  animation: pageUp 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   background: linear-gradient(to bottom, #abe5eb 0 30%, #f2fdff 30% 100%);
   font-family: 'AlimamaShuHeiTi-Regular', 'Alimama ShuHeiTi', 'PingFang SC',
     'Microsoft YaHei', sans-serif;
@@ -666,4 +667,13 @@
 .cancelBtn:active,
 .dangerBtn:active {
   background: #f3f5f5;
+}
+/* 结算页入场：从屏幕底部整页滑上来 */
+@keyframes pageUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
