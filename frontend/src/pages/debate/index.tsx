@@ -46,8 +46,12 @@ export default function Debate() {
           <p className={styles.empty}>海滩上还没有海螺</p>
         ) : (
           <ul className={styles.list}>
-            {items.map((item) => (
-              <li key={item.id} className={styles.card}>
+            {items.map((item, index) => (
+              <li
+                key={item.id}
+                className={styles.card}
+                style={{ animationDelay: `${index * 80}ms` }}
+              >
                 <p className={styles.cardText}>{item.description}</p>
                 <div className={styles.cardFoot}>
                   <span className={styles.meta}>{item.total_votes} 人捡起</span>
