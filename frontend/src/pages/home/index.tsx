@@ -25,6 +25,11 @@ function formatDate(d: Date) {
   return `${d.getMonth() + 1}月${d.getDate()}日`
 }
 
+//首页争议 每个选项最多显示7个字 超出用省略号
+function shorten(label: string) {
+  return label.length > 7 ? `${label.slice(0, 7)}…` : label
+}
+
 export default function Home() {
   const [data, setData] = useState<HomeData | null>(null)
   const [error, setError] = useState('')
@@ -66,17 +71,17 @@ export default function Home() {
         <img className={styles.clipCenter} src={clipCenter} alt="" aria-hidden="true" />
         <img className={styles.clipRight} src={clipRight} alt="" aria-hidden="true" />
       
-        <div className={styles.topTextWrapper}>
+        {/* <div className={styles.topTextWrapper}> */}
           <h2 className={styles.slogan}>去沙滩上，捡一只海螺</h2>
           <p className={styles.sloganDesc}>随机一个问题，投出你的选择</p>
-        </div>
+        {/* </div> */}
         <div
           className={styles.sweepText}
           onClick={() => navigate('/question')}
           role="button"
           tabIndex={0}
         >
-          冲刷<br/>海滩
+          冲刷海滩
         </div>
       </div>
 
@@ -102,9 +107,16 @@ export default function Home() {
               >
                 <h3 className={styles.disputeTitle}>{item.description}</h3>
                 <img className={styles.disputeShell} src={shellLogo} alt="" aria-hidden="true" />
-                <p className={styles.disputeText}>
-                  {item.options.map((option) => option.label).join(' / ')}
-                </p>
+          
+                <div className={styles.disputeText}>
+                  {item.options.map((option) => (
+                    <span key={option.id} className={styles.disputeOption}>
+                      {shorten(option.label)}
+                    </span>
+                  ))}
+                </div>
+
+                
               </article>
             ))}
           </div>

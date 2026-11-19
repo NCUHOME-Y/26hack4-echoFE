@@ -12,15 +12,18 @@
 }
 
 .hero {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 10px 16px 16px;
+  padding: 10px 20px 16px;
 }
+
 .decoPair {
   position: absolute;
   right: 14px;
-  top: 9%;
+  bottom: 0;
+  transform: translateY(50%);
   z-index: 1;
   width: 90px;
   pointer-events: none;
@@ -53,9 +56,10 @@
 .board {
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 16px 22px 24px;
+  padding: 16px 26px 24px;
   background: #f5f2d5;
   border-radius: 18px 18px 0 0;
   scrollbar-width: none;
@@ -72,6 +76,7 @@
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  animation: cardIn 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .question {
@@ -465,4 +470,16 @@
 .cancelBtn:active,
 .dangerBtn:active {
   background: #f3f5f5;
+}
+
+/* 卡片从右边缘滑入 */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(100% + 26px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

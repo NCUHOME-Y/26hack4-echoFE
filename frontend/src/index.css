@@ -21,12 +21,10 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
-
-/* 手机端：铺满屏幕，最宽按 iPhone 16 的 393 逻辑点封顶。
-   height 用 dvh（不要 100vh，Safari 地址栏收起时底部会被切掉）。 */
+/*手机端铺满屏幕 PC端单独393*/
 #root {
   width: 100%;
-  max-width: 393px;
+  /* max-width: 393px; */
   height: 100dvh;
   margin: 0 auto;
   background: #fff;
@@ -92,4 +90,8 @@ svg {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+/* 临时：统一微软雅黑。删掉这一段即完全恢复原样 */
+* {
+  font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', sans-serif !important;
 }

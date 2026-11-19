@@ -11,13 +11,14 @@
 
 .hero {
   position: relative;
-  padding: 18px 22px 22px;
+  padding: 18px 26px 22px;
 }
 /* 在青色和沙色交界线上的引号，不参与布局 */
 .decoPair {
   position: absolute;
   right: 14px;
-  bottom: -22px;
+  bottom: 0;
+  transform: translateY(50%);
   z-index: 1;
   width: 90px;
   pointer-events: none;
@@ -42,8 +43,9 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
-  padding: 16px 22px;
+  padding: 16px 26px;
   background: #f5f2d5;
   scrollbar-width: none;
 }
@@ -67,6 +69,7 @@
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 2px 0 0 rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.06);
+  animation: cardIn 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 
@@ -139,4 +142,16 @@
   height: 25px;
   background: #f5f2d5;
   border-top:  dashed #ffffff;
+}
+
+/* 卡片从右边缘滑入 */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(100% + 26px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
