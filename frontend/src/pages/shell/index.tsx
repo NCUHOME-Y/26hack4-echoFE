@@ -70,10 +70,15 @@ export default function Shell() {
           <p className={styles.empty}>没有找到相关的海螺</p>
         ) : (
           <ul className={styles.list}>
-            {visible.map((item) => {
+            {visible.map((item, index) => {
               const settled = item.settled_at !== null
               return (
-                <li key={item.id} className={`${styles.card} ${settled ? styles.cardSettled : ''}`}>
+                <li
+                  key={item.id}
+                  className={`${styles.card} ${settled ? styles.cardSettled : ''}`}
+                  style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <p className={styles.cardText}>{item.description}</p>
                   <p className={styles.cardText}>{item.description}</p>
                   <div className={styles.cardFoot}>
                     <span className={styles.meta}>{item.total_votes} 人已投票</span>
