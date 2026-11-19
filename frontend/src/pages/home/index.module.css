@@ -78,6 +78,7 @@
   margin: 0 auto;
   flex: 0 1 220px;
   min-height: 160px;
+  transform: translateY(-10px);
 }
 
 .sweepBg {
