@@ -4,70 +4,87 @@
 
 ## 项目简介
 
-「回声」是一个围绕轻量提问、投票与争议话题展开的移动端 Web 应用。
+「回声」是一个移动端 Web 应用：提出问题、投票作答、围观争议、结算结果。
 
-本仓库为前后端分离项目的前端部分，目前主要使用 TypeScript、Mock 数据和浏览器本地存储完成页面及交互开发，后续将与后端接口进行联调。
+本仓库为前后端分离项目的前端部分，使用 React + TypeScript 实现，通过 Axios 调用后端 REST 接口；开发环境由 Vite 把 `/api` 代理到本地后端，避免跨域。
 
 ## 技术栈
 
-- React 19
-- TypeScript
-- Vite 8
-- React Router
-- Axios
-- CSS Modules
-- ESLint
+- React 19 + TypeScript
+- Vite 8（`@vitejs/plugin-react` + React Compiler）
+- React Router 7
+- Axios（统一请求封装、自动携带 token、401 失效处理）
+- CSS Modules（无 UI 组件库，样式手写）
+- ESLint（flat config）+ Prettier
 - pnpm
 
 ## 当前功能
 
-以下功能基于 Mock 数据实现：
-
-- 用户注册、登录及登录状态校验
-- 内置头像展示、放大预览、左右轮换与保存
-- 个人资料展示：昵称、账号、头像、等级和经验进度
-- 我参与的：参与记录展示、三种结算状态和关键词搜索
-- 争议海螺：争议列表、最多展示最新 100 条
-- 争议详情：选择答案后立即公布最终结果
-- 我的海螺：
-  - 未结算问题优先展示
-  - 已结算问题仅保留 24 小时内
-  - 最多展示 20 条
-  - 支持关键词搜索
-  - 预留去结算入口
+- 登录、注册与登录状态校验（`RequireAuth`）
+- 首页
+  - 按时间段问候、当日日期、今日数据看板（`GET /stats/daily`）
+  - 海滩区与“冲刷海滩”入口
+  - 横向滑动的争议海螺卡片，策略展示前 4 条
+- 争议海螺
+  - 列表页拉取 `GET /questions/contested`
+  - 详情页展示题目、选项、得票占比，支持前端竞猜并公布最终结果
+  - 猜完可查看评论区，支持发表和长按删除自己的评论
+- 丢出海螺
+  - 填写题目、2～4 个选项、结算时长后发布（`POST /questions`）
+  - 题目与选项长度校验、选项重复校验
+  - 草稿自动保存到 `localStorage`，下次进入可恢复
+- 答题
+  - 随机抽题（`GET /questions/random`）、投票（`POST` 投票接口）
+  - 投票后展示结果与评论区
+- 我的海螺
+  - 我所发布的题目列表（`GET /users/me/questions`），按关键词本地过滤
+  - 未结算的题目优先展示
+  - 提供进入结算页的入口
+- 结算页（发布者）
+  - 查看投票分布，选择最终答案完成结算
+  - 结算后展示结果并支持评论
+- 答主结果页
+  - 展示我是否猜中、最终答案与评论
+- 我的
+  - 个人资料（昵称、账号、头像、等级、经验进度）
+  - 内置头像选择、放大预览、左右轮换与保存
+  - 我参与的列表，三种状态由前端根据 `settled_at` / `final_option_id` 推导
 
 ## 本地运行
 
-### 1. 安装依赖
+### 1. 先启动后端
+
+前端默认请求 `/api`，由 Vite 代理到 `http://localhost:8080`（见 `frontend/vite.config.ts`）。后端未启动时页面会提示网络异常。如果后端端口不同，改 `vite.config.ts` 里的 `target`。
+
+### 2. 安装依赖并启动
 
 ```bash
 cd frontend
 pnpm install
-```
-
-### 2. 启动开发服务器
-
-```bash
 pnpm dev
 ```
 
-根据终端输出的地址访问页面，通常为：
+根据终端输出访问，通常为：
 
 ```text
 http://localhost:5173
 ```
 
-### 3. 演示账号
+### 3. 环境变量
 
-首次使用 Mock 登录时，可以使用以下账号：
+`frontend/.env.development`：
 
-| 账号 | 密码 |
-| --- | --- |
-| `demo` | `demo12345` |
+```text
+VITE_API_BASE_URL=/api
+```
 
-也可以在注册页面创建新的本地 Mock 用户。
+请求基址由 `src/api/request.ts` 读取：
 
-> Mock 用户和登录令牌保存在浏览器 `localStorage` 中。清除站点数据后，本地账号和登录状态会被重置。请勿在 Mock 环境中使用真实密码。
+```ts
+baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api'
+```
+
+未配置 `.env.production` 时，生产构建同样使用 `/api`，即与后端同源部署。
 
 ## 常用命令
 
@@ -77,13 +94,13 @@ http://localhost:5173
 # 启动开发环境
 pnpm dev
 
-# TypeScript 检查并构建生产版本
+# 类型检查 + 生产构建
 pnpm build
 
 # 本地预览构建结果
 pnpm preview
 
-# 执行 ESLint 检查
+# ESLint 检查
 pnpm lint
 ```
 
@@ -92,97 +109,64 @@ pnpm lint
 ```text
 26hack4-echoFE/
 ├── frontend/
-│   ├── public/                 # 静态资源
+│   ├── public/
 │   ├── src/
-│   │   ├── assets/
-│   │   │   ├── avatars/        # 内置头像及头像映射
-│   │   │   └── brand/          # Logo 与页面装饰资源
+│   │   ├── api/                    # 接口层
+│   │   │   ├── request.ts          # Axios 实例、token 拦截、统一拆壳
+│   │   │   ├── auth.ts             # 登录、注册
+│   │   │   ├── home.ts             # 首页数据（看板 + 争议）
+│   │   │   ├── debate.ts           # 争议列表
+│   │   │   ├── question.ts         # 题目详情、投票、结算、评论
+│   │   │   └── me.ts               # 我的资料、我参与的、我的海螺
+│   │   ├── assets/                 # 头像、品牌装饰、首页与 TabBar 图片、字体
 │   │   ├── components/
-│   │   │   ├── Avatar/         # 通用头像组件
-│   │   │   ├── AvatarPicker/   # 头像选择弹窗
-│   │   │   ├── RequireAuth/    # 登录状态守卫
-│   │   │   └── TabBar/         # 底部导航
+│   │   │   ├── Avatar/
+│   │   │   ├── AvatarPicker/
+│   │   │   ├── RequireAuth/
+│   │   │   └── TabBar/
 │   │   ├── layouts/
-│   │   │   └── BasicLayout/    # 登录后的公共页面布局
-│   │   ├── mock/               # 临时 Mock 数据与业务规则
+│   │   │   └── BasicLayout/        # 登录后公共布局（内容区 + 底部导航）
+│   │   ├── mock/                   # 仅保留文案常量与草稿工具，不提供假数据
 │   │   ├── pages/
-│   │   │   ├── Login/          # 登录与注册
-│   │   │   ├── home/           # 首页
-│   │   │   ├── debate/         # 争议列表与争议详情
-│   │   │   ├── shell/          # 我的海螺
-│   │   │   ├── profile/        # 我的与我参与的
-│   │   │   └── question/       # 问题相关页面
-│   │   ├── App.tsx             # 路由配置
-│   │   └── main.tsx            # 应用入口
+│   │   │   ├── Login/              # 登录、注册
+│   │   │   ├── home/               # 首页
+│   │   │   ├── debate/             # 争议列表、争议详情
+│   │   │   ├── ask/                # 丢出海螺
+│   │   │   ├── question/           # 答题
+│   │   │   ├── shell/              # 我的海螺
+│   │   │   ├── end/                # 发布者结算页、答主结果页
+│   │   │   └── profile/            # 我的
+│   │   ├── App.tsx                 # 路由配置
+│   │   ├── index.css               # 全局样式与 #root 画框
+│   │   ├── main.tsx
+│   │   └── vite-env.d.ts
+│   ├── .env.development
 │   ├── eslint.config.js
-│   ├── package.json
-│   ├── pnpm-lock.yaml
-│   └── vite.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│   └── package.json
 └── README.md
 ```
 
 ## 主要路由
 
-| 路径 | 页面 |
-| --- | --- |
-| `/login` | 登录 |
-| `/register` | 注册 |
-| `/home` | 首页 |
-| `/debate` | 争议海螺列表 |
-| `/debate/:id` | 争议详情与前端竞猜 |
-| `/shell` | 我的海螺 |
-| `/profile` | 我的与我参与的 |
+| 路径 | 页面 | 布局 |
+| --- | --- | --- |
+| `/login` | 登录 | 独立 |
+| `/register` | 注册 | 独立 |
+| `/home` | 首页 | BasicLayout |
+| `/debate` | 争议海螺列表 | BasicLayout |
+| `/debate/:id` | 争议详情 | BasicLayout |
+| `/shell` | 我的海螺 | BasicLayout |
+| `/profile` | 我的 | BasicLayout |
+| `/ask` | 丢出海螺 | 全屏 |
+| `/question` | 随机答题 | 全屏 |
+| `/settle/:id` | 发布者结算页 | 全屏 |
+| `/answer-end/:id` | 答主结果页 | 全屏 |
 
-除登录、注册等公开页面外，主要页面通过 `RequireAuth` 进行登录状态校验。
-
-## 数据与接口约定
-
-- 接口字段以团队最新 `openapi.yaml` 和 Apifox 文档为准。
-- 接口字段保持 `snake_case`，不在页面层擅自转换为其他命名。
-- 问题没有独立标题，`description` 保存完整问题描述。
-- 争议状态通过 `contested_at` 判断，不能仅通过 `status` 判断。
-- 争议详情中的“猜一个”是前端竞猜交互，不调用真实投票接口。
-- 经验每 50 点提升一级，等级上限为 9999。
-- 当前 Mock 数据仅用于前端开发，不作为后端数据库初始化数据。
-
-## 环境变量与后端联调
-
-当前版本直接使用 `src/mock` 中的数据，尚未完成统一的真实 API 请求层，因此不配置环境变量也可以运行 Mock 版本。
-
-正式联调时计划统一使用：
-
-```text
-VITE_API_BASE_URL=后端接口地址
-```
-
-接入真实接口时，还需要：
-
-1. 增加统一请求封装和鉴权令牌处理。
-2. 增加开发环境、生产环境的环境变量配置。
-3. 提供不包含真实密钥的 `.env.example`。
-4. 按 Apifox 文档统一响应结构和异常提示。
-5. 联调完成后移除或隔离对应页面的 Mock 数据。
-
-## 当前待完成事项
-
-- 争议详情评论区及发表评论。
-- 与结算页负责人确认真实路由，接通“去结算”按钮。
-- 接入真实后端接口和环境变量。
-- 补充线上部署地址和交付链接。
-- 完成构建检查及移动端页面验收。
-
-## 交付信息
-
-以下将在交付前补充：
-
-| 内容 | 地址或说明 |
-| --- | --- |
-| GitHub 前端仓库 | 待补充 |
-| Apifox 接口文档 | 待补充 |
-| 前端线上地址 | 待补充 |
-| 后端仓库及数据库表结构 | 待补充 |
-| 本人 PR 记录 | 交付前补充，至少 2 个 PR |
-| 他人 PR Review 记录 | 交付前补充，至少 review 1 个 PR |
+除登录、注册外，所有路由都经过 `RequireAuth` 校验；未登录访问任意路径会跳回 `/login`。
 
 ## 构建与验收
 
@@ -193,11 +177,16 @@ pnpm lint
 pnpm build
 ```
 
-并重点检查：
+`build` 会先跑 `tsc -b` 做类型检查，再执行 `vite build`，任一步失败都不会产出构建结果。
 
-- 注册、登录和未登录跳转是否正常。
-- 头像选择、轮换、保存是否正常。
-- 争议列表顺序、详情切换和答案公布是否正常。
-- 长问题描述是否溢出卡片。
-- 我的海螺的搜索、20 条上限和 24 小时过滤是否正常。
-- 手机尺寸下列表滚动、底部导航和输入框是否正常。
+重点验收：
+
+- 未登录访问任意页面是否跳回登录页，登录后能否正常返回。
+- 首页在 375×667、393×852 等尺寸下是否单屏展示、无横向滚动。
+- 首页、争议列表、丢出海螺、结算页的入场动画是否正常，动画期间页面能否被横向拖动。
+- 争议详情的竞猜、答案公布、评论发表与长按删除。
+- 丢出海螺的长度校验、重复选项校验、草稿恢复、发布成功弹窗。
+- 答题页投票后结果与评论区是否正确刷新。
+- 我的海螺的搜索过滤、未结算优先和结算入口。
+- 结算页选择答案后状态是否更新，返回列表是否同步。
+- 移动端软键盘弹出时输入框是否被遮挡。
