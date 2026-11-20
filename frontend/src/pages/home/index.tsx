@@ -10,7 +10,7 @@ import clipLeft from '../../assets/brand/deco-1.png'
 import clipCenter from '../../assets/brand/deco-2.png'
 import clipRight from '../../assets/brand/deco-3.png'
 import shellLogo from '../../assets/brand/shell.png'
-import statsIcon from '../../assets/home/Vector-2.png'
+import statsIcon from '../../assets/home/vector-2.png'
 
 
 function greeting(d: Date) {
