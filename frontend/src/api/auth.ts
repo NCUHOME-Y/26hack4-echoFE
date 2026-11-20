@@ -38,6 +38,20 @@ export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+export function isLoggedIn(): boolean {
+  const token = getToken()
+  if (!token) return false
+  try {
+    const seg = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    const pad = seg.length % 4 === 0 ? '' : '='.repeat(4 - (seg.length % 4))
+    const payload = JSON.parse(atob(seg + pad)) as { exp?: number }
+    return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now()
+  } catch {
+    return false 
+  }
+}
+
+
 export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY)
 }
