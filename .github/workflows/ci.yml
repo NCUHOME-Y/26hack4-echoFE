@@ -56,4 +56,4 @@ jobs:
           : "${AWS_ACCESS_KEY_ID:?请先配置仓库 Secret AWS_ACCESS_KEY_ID}"
           : "${AWS_SECRET_ACCESS_KEY:?请先配置仓库 Secret AWS_SECRET_ACCESS_KEY}"
           aws --endpoint-url https://s3.ncuos.com s3 sync dist/ s3://26-hack-4-fe/ --exclude index.html --only-show-errors
-          aws --endpoint-url https://s3.ncuos.com s3 cp dist/index.html s3://26-hack-4-fe/index.html --content-type
+          aws --endpoint-url https://s3.ncuos.com s3 cp dist/index.html s3://26-hack-4-fe/index.html --content-type text/html --cache-control no-cache --only-show-errors
