@@ -270,7 +270,7 @@ export default function AnswerEnd() {
                         />
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
-                            <span className={styles.commentName}>匿名海螺</span>
+                            <span className={styles.commentName}>{c.author.nickname}</span>
                             <span className={styles.commentLevel}>
                               lv{c.author.level}
                             </span>

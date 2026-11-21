@@ -365,7 +365,7 @@ export default function End() {
                         />
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
-                            <span className={styles.commentName}>匿名海螺</span>
+                            <span className={styles.commentName}>{c.author.nickname}</span>
                             <span className={styles.commentLevel}>lv{c.author.level}</span>
                           </div>
                           <p className={styles.commentText}>{c.content}</p>
