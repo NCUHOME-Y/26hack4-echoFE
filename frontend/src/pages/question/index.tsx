@@ -304,7 +304,7 @@ function loadQuestion() {
 
                         <div className={styles.commentBody}>
                           <div className={styles.commentMeta}>
-                            <span className={styles.commentName}>匿名海螺</span>
+                            <span className={styles.commentName}>{c.author.nickname}</span>
                             {/* 审核 */}
                             <span className={styles.commentLevel}>
                               lv{c.author.level}
