@@ -79,7 +79,7 @@ export default function Shell() {
                   style={{ animationDelay: `${index * 80}ms` }}
                 >
                   <p className={styles.cardText}>{item.description}</p>
-                  <p className={styles.cardText}>{item.description}</p>
+            
                   <div className={styles.cardFoot}>
                     <span className={styles.meta}>{item.total_votes} 人已投票</span>
                     <button
