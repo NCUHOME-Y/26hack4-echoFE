@@ -77,7 +77,11 @@ export default function Profile() {
           onClick={() => setPickerOpen(true)}
           aria-label="更换头像"
         >
-          <Avatar avatar={me?.avatar} size={64} />
+        {me ? (
+            <Avatar avatar={me.avatar} size={64} />
+          ) : (
+            <span className={styles.avatarPlaceholder} aria-hidden="true" />
+          )}
         </button>
 
         <div className={styles.meta}>

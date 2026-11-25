@@ -240,6 +240,14 @@
   border-radius: 50%;
   cursor: pointer;
 }
+/*头像加载中的占位圆 尺寸和真实头像一致 避免加载完跳动*/
+.avatarPlaceholder {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #e6e6e6;
+}
 /*顶部的沙色条*/
 .sandTop {
   flex: 0 0 auto;
