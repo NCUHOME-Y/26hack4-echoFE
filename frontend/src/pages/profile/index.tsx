@@ -21,6 +21,7 @@ export default function Profile() {
   const [me, setMe] = useState<MeProfile | null>(null)
   const [items, setItems] = useState<AnswerItem[]>([])
   const [keyword, setKeyword] = useState('')
+  const [debouncedKeyword, setDebouncedKeyword] = useState('')
   const [error, setError] = useState('')
   const [listLoading, setListLoading] = useState(true)
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -40,11 +41,19 @@ export default function Profile() {
     }
   }, [])
 
-  //搜索词一变就重新查
+
+//输入防抖：停止输入 300ms 后才更新真正要查的关键词
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [keyword])
+  //防抖后的关键词一变才真正查
   useEffect(() => {
     let cancelled = false
 
-    getMyParticipations(keyword)
+    getMyParticipations(debouncedKeyword)
       .then((list) => {
         if (!cancelled) setItems(list)
       })
@@ -57,7 +66,7 @@ export default function Profile() {
     return () => {
       cancelled = true
     }
-  }, [keyword])
+  }, [debouncedKeyword])
 
   //进度条百分比 本级经验/50
   const progress = me ? (me.level_progress / EXP_PER_LEVEL) * 100 : 0
