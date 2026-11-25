@@ -77,23 +77,34 @@ export default function Profile() {
           onClick={() => setPickerOpen(true)}
           aria-label="更换头像"
         >
-        {me ? (
+          {me ? (
             <Avatar avatar={me.avatar} size={64} />
           ) : (
             <span className={styles.avatarPlaceholder} aria-hidden="true" />
           )}
         </button>
-
         <div className={styles.meta}>
-          <p className={styles.nickname}>{me?.nickname ?? '…'}</p>
-          <p className={styles.account}>@{me?.account ?? '—'}</p>
-          
+          {me ? (
+            <p className={styles.nickname}>{me.nickname}</p>
+          ) : (
+            <div className={styles.skeletonName} />
+          )}
+          {me ? (
+            <p className={styles.account}>@{me.account}</p>
+          ) : (
+            <div className={styles.skeletonAccount} />
+          )}
+
           <div className={styles.progress}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
-          <p className={styles.level}>
-            {me ? `lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}` : 'lv— —/50'}
-          </p>
+          {me ? (
+            <p className={styles.level}>
+              {`lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}`}
+            </p>
+          ) : (
+            <div className={styles.skeletonLevel} />
+          )}
         </div>
       </section>
 
@@ -128,7 +139,14 @@ export default function Profile() {
       <section className={styles.listArea}>
         {error && <p className={styles.error}>{error}</p>}
         {listLoading ? (
-          <p className={styles.empty}>正在打捞…</p>
+          <ul className={styles.list}>
+            {[0, 1, 2, 3].map((i) => (
+              <li key={i} className={styles.item}>
+                <div className={styles.skeletonText} />
+                <div className={styles.skeletonBadge} />
+              </li>
+            ))}
+          </ul>
         ) : items.length === 0 ? (
           <p className={styles.empty}>没有找到相关的海螺</p>
         ) : (
