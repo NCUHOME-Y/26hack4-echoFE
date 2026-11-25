@@ -21,6 +21,7 @@ export default function Profile() {
   const [me, setMe] = useState<MeProfile | null>(null)
   const [items, setItems] = useState<AnswerItem[]>([])
   const [keyword, setKeyword] = useState('')
+  const [debouncedKeyword, setDebouncedKeyword] = useState('')
   const [error, setError] = useState('')
   const [listLoading, setListLoading] = useState(true)
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -40,11 +41,19 @@ export default function Profile() {
     }
   }, [])
 
-  //搜索词一变就重新查
+
+//输入防抖：停止输入 300ms 后才更新真正要查的关键词
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [keyword])
+  //防抖后的关键词一变才真正查
   useEffect(() => {
     let cancelled = false
 
-    getMyParticipations(keyword)
+    getMyParticipations(debouncedKeyword)
       .then((list) => {
         if (!cancelled) setItems(list)
       })
@@ -57,7 +66,7 @@ export default function Profile() {
     return () => {
       cancelled = true
     }
-  }, [keyword])
+  }, [debouncedKeyword])
 
   //进度条百分比 本级经验/50
   const progress = me ? (me.level_progress / EXP_PER_LEVEL) * 100 : 0
@@ -77,19 +86,34 @@ export default function Profile() {
           onClick={() => setPickerOpen(true)}
           aria-label="更换头像"
         >
-          <Avatar avatar={me?.avatar} size={64} />
+          {me ? (
+            <Avatar avatar={me.avatar} size={64} />
+          ) : (
+            <span className={styles.avatarPlaceholder} aria-hidden="true" />
+          )}
         </button>
-
         <div className={styles.meta}>
-          <p className={styles.nickname}>{me?.nickname ?? '…'}</p>
-          <p className={styles.account}>@{me?.account ?? '—'}</p>
-          
+          {me ? (
+            <p className={styles.nickname}>{me.nickname}</p>
+          ) : (
+            <div className={styles.skeletonName} />
+          )}
+          {me ? (
+            <p className={styles.account}>@{me.account}</p>
+          ) : (
+            <div className={styles.skeletonAccount} />
+          )}
+
           <div className={styles.progress}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
-          <p className={styles.level}>
-            {me ? `lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}` : 'lv— —/50'}
-          </p>
+          {me ? (
+            <p className={styles.level}>
+              {`lv${Math.min(me.level, 9999)} ${me.level_progress}/${EXP_PER_LEVEL}`}
+            </p>
+          ) : (
+            <div className={styles.skeletonLevel} />
+          )}
         </div>
       </section>
 
@@ -124,7 +148,14 @@ export default function Profile() {
       <section className={styles.listArea}>
         {error && <p className={styles.error}>{error}</p>}
         {listLoading ? (
-          <p className={styles.empty}>正在打捞…</p>
+          <ul className={styles.list}>
+            {[0, 1, 2, 3].map((i) => (
+              <li key={i} className={styles.item}>
+                <div className={styles.skeletonText} />
+                <div className={styles.skeletonBadge} />
+              </li>
+            ))}
+          </ul>
         ) : items.length === 0 ? (
           <p className={styles.empty}>没有找到相关的海螺</p>
         ) : (

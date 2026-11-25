@@ -48,6 +48,7 @@ export default function End() {
   const [submitting, setSubmitting] = useState(false)
 
   const [comments, setComments] = useState<CommentView[]>([])
+  const [sending, setSending] = useState(false)
   const [draft, setDraft] = useState('')
   const [commentError, setCommentError] = useState('')
   const [confirmId, setConfirmId] = useState<number | null>(null)
@@ -124,17 +125,17 @@ export default function End() {
   }
 
   async function handleSend() {
-    if (!question) return
-    const text = draft.trim()
-    if (!text) return
+    if (!question || !draft.trim() || sending) return
+    setSending(true)
     try {
-      // 发问者视角
-      const list = await addComment(question.id, text)
+      const list = await addComment(question.id, draft)
       setComments(list)
       setDraft('')
       setCommentError('')
     } catch (err) {
       setCommentError(err instanceof Error ? err.message : '发送失败')
+    } finally {
+      setSending(false)
     }
   }
 
@@ -386,10 +387,10 @@ export default function End() {
                   <button
                     type="button"
                     className={styles.sendBtn}
-                    disabled={!draft.trim()}
+                    disabled={!draft.trim() || sending}
                     onClick={handleSend}
                   >
-                    发送
+                    {sending ? '发送中…' : '发送'}
                   </button>
                 </div>
                 <p className={styles.counter}>

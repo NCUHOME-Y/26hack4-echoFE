@@ -240,6 +240,52 @@
   border-radius: 50%;
   cursor: pointer;
 }
+/*头像加载中的占位圆 尺寸和真实头像一致 避免加载完跳动*/
+.avatarPlaceholder {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #e6e6e6;
+}
+/*骨架屏，加载时的占位块，让加载后的页面布局不会突然变*/
+.skeletonName {
+  height: 20px;
+  width: 64%;
+  margin: 7px 10px 1px;
+  border-radius: 6px;
+  background: #e9e9e9;
+}
+
+.skeletonAccount {
+  height: 12px;
+  width: 40%;
+  margin: 0 10px 4px;
+  border-radius: 6px;
+  background: #e9e9e9;
+}
+
+.skeletonLevel {
+  height: 13px;
+  width: 50%;
+  margin: 7px 1px 12px;
+  border-radius: 6px;
+  background: #e9e9e9;
+}
+.skeletonText {
+  flex: 1;
+  height: 15px;
+  border-radius: 6px;
+  background: #e9e9e9;
+}
+
+.skeletonBadge {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 20px;
+  border-radius: 6px;
+  background: #e9e9e9;
+}
 /*顶部的沙色条*/
 .sandTop {
   flex: 0 0 auto;
