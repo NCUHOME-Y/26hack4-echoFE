@@ -237,7 +237,7 @@ export default function AnswerEnd() {
                 <p className={styles.gain}>
                   {question.my_vote.option_id === question.final_option_id
                     ? `猜中发布者的选择，获得${mySettleExp}积分`
-                    : `投出这一票获得$mySettleExp}积分`}
+                    : `投出这一票获得${mySettleExp}积分`}
                 </p>
               )}
 
