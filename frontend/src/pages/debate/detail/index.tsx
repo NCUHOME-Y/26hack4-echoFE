@@ -39,6 +39,7 @@ export default function DebateDetail(){
   useEffect(() => {
     if (invalidId) return
 
+    setLoading(true)   //切题先进入加载态，避免显示上一题
     let cancelled = false
 
     getQuestionDetail(qid)
@@ -153,7 +154,14 @@ export default function DebateDetail(){
       </header>
 
       <div className={styles.board}>
-        {displayLoading && <p className={styles.status}>正在打捞…</p>}
+        {displayLoading && (
+          <div className={styles.skeleton}>
+            <div className={styles.skeletonCard} />
+            <div className={styles.skeletonOption} />
+            <div className={styles.skeletonOption} />
+            <div className={styles.skeletonOption} />
+          </div>
+        )}
         {!displayLoading && displayError && (
           <p className={styles.error}>{displayError}</p>
         )}
