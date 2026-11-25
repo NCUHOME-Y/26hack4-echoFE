@@ -28,6 +28,7 @@ export default function DebateDetail(){
 
   // 评论区（猜完之后才出现，和答题页一致）
   const [comments, setComments] = useState<CommentView[]>([])
+  const [sending, setSending] = useState(false)
   const [draft, setDraft] = useState('')
   const [commentError, setCommentError] = useState('')
   const [confirmId, setConfirmId] = useState<number | null>(null)
@@ -99,7 +100,8 @@ export default function DebateDetail(){
   }, [revealed, detail])
 
   async function handleSend() {
-    if (!detail || !draft.trim()) return
+    if (!detail || !draft.trim() || sending) return
+    setSending(true)
     try {
       const list = await addComment(detail.id, draft)
       setComments(list)
@@ -107,6 +109,8 @@ export default function DebateDetail(){
       setCommentError('')
     } catch (err) {
       setCommentError(err instanceof Error ? err.message : '发送失败')
+    } finally {
+      setSending(false)
     }
   }
 
@@ -258,10 +262,10 @@ export default function DebateDetail(){
                   <button
                     type="button"
                     className={styles.sendBtn}
-                    disabled={!draft.trim()}
+                    disabled={!draft.trim() || sending}
                     onClick={handleSend}
                   >
-                    发送
+                    {sending ? '发送中…' : '发送'}
                   </button>
                 </div>
 

@@ -36,6 +36,7 @@ export default function Answer() {
   const [loadError, setLoadError] = useState('')
 
   const [comments, setComments] = useState<CommentView[]>([])
+  const [sending, setSending] = useState(false)
   const [draft, setDraft] = useState('')
   const [commentError, setCommentError] = useState('')
   const [confirmId, setConfirmId] = useState<number | null>(null)
@@ -143,7 +144,8 @@ function loadQuestion() {
 
   // 发评论
   async function handleSend() {
-    if (!question || !draft.trim()) return
+    if (!question || !draft.trim() || sending) return
+    setSending(true)
     try {
       const list = await addComment(question.id, draft)
       setComments(list)
@@ -151,9 +153,10 @@ function loadQuestion() {
       setCommentError('')
     } catch (err) {
       setCommentError(err instanceof Error ? err.message : '发送失败')
+    } finally {
+      setSending(false)
     }
   }
-
   async function handleDelete(commentId: number) {
     if (!question) return
     try {
@@ -328,10 +331,10 @@ function loadQuestion() {
                   <button
                     type="button"
                     className={styles.sendBtn}
-                    disabled={!draft.trim()}
+                    disabled={!draft.trim() || sending}
                     onClick={handleSend}
                   >
-                    发送
+                    {sending ? '发送中…' : '发送'}
                   </button>
                 </div>
 
