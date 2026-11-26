@@ -81,17 +81,13 @@ export async function getMyParticipations(keyword = ''): Promise<AnswerItem[]> {
   })
   return data.list
 }
-//我的海螺前端展示规则：已结算只保留24小时、未结算在上、组内越新越上、最多20条
+//我的海螺前端展示规则：未结算在上、组内越新越上、最多20条
 export const MY_QUESTION_LIMIT = 20
-export const SETTLED_KEEP_MS = 24 * 60 * 60 * 1000
 
-export function displayMyQuestions(list: MyQuestion[], now = Date.now()): MyQuestion[] {
-  const recent = list.filter(
-    (q) => q.settled_at === null || now - new Date(q.settled_at).getTime() <= SETTLED_KEEP_MS,
-  )
+export function displayMyQuestions(list: MyQuestion[]): MyQuestion[] {
   const byNewest = (a: MyQuestion, b: MyQuestion) => b.created_at.localeCompare(a.created_at)
-  const open = recent.filter((q) => q.settled_at === null).sort(byNewest)
-  const settled = recent.filter((q) => q.settled_at !== null).sort(byNewest)
+  const open = list.filter((q) => q.settled_at === null).sort(byNewest)
+  const settled = list.filter((q) => q.settled_at !== null).sort(byNewest)
   return [...open, ...settled].slice(0, MY_QUESTION_LIMIT)
 }
 //我的海螺：后端按创建时间倒序返回原始列表，24小时过滤和20条上限在这里统一处理
